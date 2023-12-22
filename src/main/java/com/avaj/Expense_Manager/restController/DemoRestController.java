@@ -1,4 +1,4 @@
-package com.avaj.Expense_Manager.controller;
+package com.avaj.Expense_Manager.restController;
 
 import com.avaj.Expense_Manager.entity.Expense;
 import com.avaj.Expense_Manager.entity.FinalSplit;

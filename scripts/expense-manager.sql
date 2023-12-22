@@ -8,12 +8,12 @@ SET FOREIGN_KEY_CHECKS = 0;
 CREATE TABLE `User` (
     `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
     `first_name` VARCHAR(255),
-    `last_name` VARCHAR(255),
-    `username` VARCHAR(255) UNIQUE,
-    `password` VARCHAR(68),
-    `enabled` tinyint NOT NULL,
-    `role` VARCHAR(255)
+    `last_name` VARCHAR(255)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `User` 
+VALUES 
+(1,'Ajay','Kumar');
 
 -- `Group` Table (using backticks to handle reserved keyword)
 CREATE TABLE `Group` (

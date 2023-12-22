@@ -6,7 +6,6 @@ import com.avaj.Expense_Manager.entity.User;
 import com.avaj.Expense_Manager.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,24 +13,20 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService{
     private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
     
     @Autowired
-    public  void UserServiceImpl(UserRepository theUserRepository,PasswordEncoder thePasswordEncoder){
+    public  void UserServiceImpl(UserRepository theUserRepository){
         this.userRepository = theUserRepository;
-        this.passwordEncoder = thePasswordEncoder;
     }
 
     @Override
     @Transactional
     public User createUser(User theUser) {
         User user = new User();
-        user.setUserFirstName(theUser.getUserFirstName());
-        user.setUserLastName(theUser.getUserLastName());
-        user.setUserName(theUser.getUserName());
-        user.setUserPassword(passwordEncoder.encode(theUser.getUserPassword()));
+        user.setFirstName(theUser.getFirstName());
+        user.setLastName(theUser.getLastName());
         user.setUserGroups(null);
-        user.setRole("USER");
+        user.setExpenses(null);
         userRepository.save(user);
         return user;
     }
@@ -44,13 +39,11 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional
-    public void updateUserById(Long userId,String username, String password) {
-        Optional<User> optionalUser = userRepository.findById(userId);
-
+    public void updateUserById(User theUser) {
+        Optional<User> optionalUser = userRepository.findById(theUser.getId());
         optionalUser.ifPresent(user -> {
-            user.setUserName(username);
-            user.setUserPassword(passwordEncoder.encode(password)); // Remember to encode the password using PasswordEncoder
-
+            user.setFirstName(theUser.getFirstName());
+            user.setLastName(theUser.getLastName());
             userRepository.save(user);
         });
     }
