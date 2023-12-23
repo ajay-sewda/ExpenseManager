@@ -3,16 +3,24 @@ package com.avaj.Expense_Manager.service;
 import com.avaj.Expense_Manager.entity.Expense;
 import com.avaj.Expense_Manager.entity.Group;
 import com.avaj.Expense_Manager.entity.User;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
-    User createUser(User theUser);
-    void deleteUserById(Long userId);
-    void updateUserById(User theUser);
-    User getUserById(Long userId);
+   void createUser(User theUser);
     List<User> getAllUsers();
-    List<Group> getUserGroups(Long userId);
-    List<Expense> getUserExpense(Long userId);
+    Optional<User> getUserByUserName(String userName);
+    List<Group> getUserGroups(String userName);
+    List<Expense> getUserExpense(String userName);
+    @Transactional
+    void updateUser(User theUser);
+    @Transactional
+    void deleteUserByUserName(String userName);
+
+
+
+
 
 }

@@ -13,10 +13,10 @@ public class FinalSplit {
     private Long id;
 
     @Column(name="paid_to")
-    private Long finalPayTo;
+    private String finalPayTo;
 
     @Column(name="paid_by")
-    private Long finalPayBy;
+    private String finalPayBy;
 
     @Column(name="amount")
     private Float finalAmt;

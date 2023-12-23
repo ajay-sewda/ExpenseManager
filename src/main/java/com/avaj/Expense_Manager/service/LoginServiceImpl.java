@@ -18,7 +18,7 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     @Transactional
-    public void saveUser(LoginDetail loginDetail) {
+    public void createUser(LoginDetail loginDetail) {
         LoginDetail theLoginDetail = new LoginDetail();
         theLoginDetail.setUserName(loginDetail.getUserName());
 //        theLoginDetail.setPassword(passwordEncoder.encode(loginDetail.getPassword()));

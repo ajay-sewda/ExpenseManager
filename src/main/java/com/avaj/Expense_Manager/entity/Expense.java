@@ -30,7 +30,7 @@ public class Expense {
     private Float expAmt;
 
     @Column(name="paid_by")
-    private Long expPaidBy;
+    private String expPaidBy;
 
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "User_Expense",

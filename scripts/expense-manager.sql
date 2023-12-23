@@ -8,12 +8,41 @@ SET FOREIGN_KEY_CHECKS = 0;
 CREATE TABLE `User` (
     `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
     `first_name` VARCHAR(255),
-    `last_name` VARCHAR(255)
+    `last_name` VARCHAR(255),
+    `role` varchar(50) NOT NULL
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 INSERT INTO `User` 
 VALUES 
-(1,'Ajay','Kumar');
+(1,'Ajay','Kumar','ROLE_ADMIN');
+
+--
+-- Table structure for table `loginDetails`
+--
+
+CREATE TABLE `loginDetails` (
+`id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `username` varchar(50) NOT NULL,
+  `password` char(68) NOT NULL,
+  `enabled` tinyint NOT NULL,
+  user_id BIGINT,
+  FOREIGN KEY (user_id) REFERENCES `User`(id),
+  UNIQUE KEY (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Inserting data for table `loginDetails`
+--
+-- NOTE: The passwords are encrypted using BCrypt
+--
+-- A generation tool is avail at: https://www.luv2code.com/generate-bcrypt-password
+--
+-- Default passwords here are: Ajay@2895
+--
+ 
+INSERT INTO `loginDetails` 
+VALUES 
+(1,'ajay@gmail.com','{noop}Ajay@2895',1,1);
 
 -- `Group` Table (using backticks to handle reserved keyword)
 CREATE TABLE `Group` (
@@ -64,8 +93,5 @@ CREATE TABLE User_Expense (
     FOREIGN KEY (expense_id) REFERENCES Expense(id)
 );
 
--- Foreign key constraints for bi-directional relationship
-ALTER TABLE `User` ADD CONSTRAINT fk_group_owner FOREIGN KEY (id) REFERENCES `Group`(id);
-ALTER TABLE `Group` ADD CONSTRAINT fk_user_owner FOREIGN KEY (id) REFERENCES `User`(id);
 
 SET FOREIGN_KEY_CHECKS = 1;

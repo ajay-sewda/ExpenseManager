@@ -25,7 +25,7 @@ CREATE TABLE `loginDetails` (
  
 INSERT INTO `loginDetails` 
 VALUES 
-('ajay@gmail.com','{bcrypt}$2a$12$jq2C5gr3gNPTWeDYVyloDu/3mc1Ho1wTnwPSi0PLEV5qVhgtHGRF6',1,1);
+('ajay@gmail.com','{noop}Ajay@2895',1,1);
 
 --
 -- Table structure for table `authorities`

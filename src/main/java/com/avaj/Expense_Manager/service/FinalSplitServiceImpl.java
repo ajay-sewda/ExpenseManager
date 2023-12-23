@@ -35,12 +35,12 @@ public class FinalSplitServiceImpl implements FinalSplitService {
         List<User> users = group.getGroupUsers();
         List<Expense> expenses = group.getExpenses();
 
-        Map<Long, Float> balanceMap = new HashMap<>();
+        Map<String, Float> balanceMap = new HashMap<>();
         DecimalFormat df = new DecimalFormat("#.##");
 
         // Initialize balance for each user in the group
         for (User user : users) {
-            balanceMap.put(user.getId(), 0.0f);
+            balanceMap.put((user.getUserName()), 0.0f);
         }
 
         // Calculate individual balances based on expenses
@@ -50,7 +50,7 @@ public class FinalSplitServiceImpl implements FinalSplitService {
 
             balanceMap.put(expense.getExpPaidBy(), balanceMap.get(expense.getExpPaidBy()) - totalExpense);
             for (User user : expense.getUsrSplitBtw()) {
-                balanceMap.put(user.getId(), balanceMap.get(user.getId()) + splitAmount);
+                balanceMap.put(user.getUserName(), balanceMap.get(user.getUserName()) + splitAmount);
             }
         }
 
@@ -59,19 +59,19 @@ public class FinalSplitServiceImpl implements FinalSplitService {
         for (User debtor : users) {
             for (User creditor : users) {
                 if (!debtor.equals(creditor)) {
-                    Float amount = balanceMap.get(debtor.getId());
+                    Float amount = balanceMap.get(debtor.getUserName());
                     if (amount < 0) {
-                        Float transferAmount = Math.min(Math.abs(amount), balanceMap.get(creditor.getId()));
+                        Float transferAmount = Math.min(Math.abs(amount), balanceMap.get(creditor.getUserName()));
                         if (transferAmount > 0) {
                             FinalSplit finalSplit = new FinalSplit();
-                            finalSplit.setFinalPayBy(debtor.getId());
-                            finalSplit.setFinalPayTo(creditor.getId());
+                            finalSplit.setFinalPayBy(debtor.getUserName());
+                            finalSplit.setFinalPayTo(creditor.getUserName());
                             finalSplit.setFinalAmt(Float.parseFloat(df.format(transferAmount)));
                             finalSplit.setFinalSplitGrp(group);
                             finalSplits.add(finalSplit);
 
-                            balanceMap.put(debtor.getId(), balanceMap.get(debtor.getId()) + transferAmount);
-                            balanceMap.put(creditor.getId(), balanceMap.get(creditor.getId()) - transferAmount);
+                            balanceMap.put(debtor.getUserName(), balanceMap.get(debtor.getUserName()) + transferAmount);
+                            balanceMap.put(creditor.getUserName(), balanceMap.get(creditor.getUserName()) - transferAmount);
                         }
                     }
                 }

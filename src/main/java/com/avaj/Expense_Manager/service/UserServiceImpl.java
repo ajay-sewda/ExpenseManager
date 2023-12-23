@@ -21,36 +21,13 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional
-    public User createUser(User theUser) {
+    public void createUser(User theUser) {
         User user = new User();
         user.setFirstName(theUser.getFirstName());
         user.setLastName(theUser.getLastName());
         user.setUserGroups(null);
         user.setExpenses(null);
         userRepository.save(user);
-        return user;
-    }
-
-    @Override
-    @Transactional
-    public void deleteUserById(Long userId) {
-        userRepository.deleteById(userId);
-    }
-
-    @Override
-    @Transactional
-    public void updateUserById(User theUser) {
-        Optional<User> optionalUser = userRepository.findById(theUser.getId());
-        optionalUser.ifPresent(user -> {
-            user.setFirstName(theUser.getFirstName());
-            user.setLastName(theUser.getLastName());
-            userRepository.save(user);
-        });
-    }
-
-    @Override
-    public User getUserById(Long userId) {
-        return userRepository.findById(userId).get();
     }
 
     @Override
@@ -59,12 +36,39 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<Group> getUserGroups(Long userId) {
-        return userRepository.findById(userId).get().getUserGroups();
+    public Optional<User> getUserByUserName(String userName) {
+        return  userRepository.findById(userName);
     }
 
     @Override
-    public List<Expense> getUserExpense(Long userId) {
-        return userRepository.findById(userId).get().getExpenses();
+    public List<Group> getUserGroups(String userName) {
+        return userRepository.findById(userName).get().getUserGroups();
     }
+
+    @Override
+    public List<Expense> getUserExpense(String userName) {
+        return userRepository.findById(userName).get().getExpenses();
+    }
+    @Override
+    @Transactional
+    public void updateUser(User theUser) {
+        Optional<User> optionalUser = userRepository.findById(theUser.getUserName());
+        optionalUser.ifPresent(user -> {
+            user.setFirstName(theUser.getFirstName());
+            user.setLastName(theUser.getLastName());
+            userRepository.save(user);
+        });
+    }
+
+
+    @Override
+    @Transactional
+    public void deleteUserByUserName(String userName) {
+        userRepository.deleteById(userName);
+    }
+
+
+
+
+
 }
