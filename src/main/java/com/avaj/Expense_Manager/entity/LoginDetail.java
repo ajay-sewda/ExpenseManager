@@ -9,27 +9,28 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="loginDetails")
+//@Table(name="loginDetails")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginDetail {
 
-    @Column(name="username")
+//    @Column(name="username")
+    @Id
     @NotEmpty(message = "Username is required")
     @Size(min = 5, max = 20, message = "Username must be between 5 and 20 characters")
     private String userName;
 
-    @Column(name="password", unique = true)
+//    @Column(name="password", unique = true)
     @JsonIgnore
     @NotEmpty(message = "Password is required")
     @Size(min = 8, message = "Password must be at least 8 characters")
     private String password;
 
-    @Column(name="enabled")
-    private Boolean enabled = true;
+//    @Column(name="enabled")
+//    private Boolean enabled = true;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="username")
-    private User user;
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name="username")
+//    private User user;
 }
