@@ -10,18 +10,16 @@ import java.util.List;
 
 @Service
 public class ExpenseServiceImpl implements ExpenseService{
-
     private ExpenseRepository expenseRepository;
-    private GroupService groupService;
+
     @Autowired
-    public ExpenseServiceImpl(ExpenseRepository expenseRepository, GroupService groupService) {
+    public ExpenseServiceImpl(ExpenseRepository expenseRepository) {
         this.expenseRepository = expenseRepository;
-        this.groupService = groupService;
     }
 
     @Override
     @Transactional
-    public Expense createExpense(Expense theExpense) {
+    public void createExpense(Expense theExpense) {
         Expense expense = new Expense();
         expense.setExpName(theExpense.getExpName());
         expense.setExpAmt(theExpense.getExpAmt());
@@ -29,18 +27,10 @@ public class ExpenseServiceImpl implements ExpenseService{
         expense.setExpPaidBy(theExpense.getExpPaidBy());
         expense.setExpGrp(theExpense.getExpGrp());
         expenseRepository.save(expense);
-        return expense;
     }
-
     @Override
-    @Transactional
-    public void deleteExpenseById(Long expenseId) {
-        expenseRepository.deleteById(expenseId);
-    }
-
-    @Override
-    public List<Expense> getGroupExpenses(Long groupId) {
-        return groupService.getGroupById(groupId).getExpenses();
+    public Expense getExpenseById(Long expenseId) {
+        return expenseRepository.findById(expenseId).get();
     }
 
     @Override
@@ -56,7 +46,8 @@ public class ExpenseServiceImpl implements ExpenseService{
     }
 
     @Override
-    public Expense getExpenseById(Long expenseId) {
-        return expenseRepository.findById(expenseId).get();
+    @Transactional
+    public void deleteExpenseById(Long expenseId) {
+        expenseRepository.deleteById(expenseId);
     }
 }

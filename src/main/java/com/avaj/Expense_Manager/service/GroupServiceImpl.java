@@ -22,32 +22,20 @@ public class GroupServiceImpl implements GroupService{
 
     @Override
     @Transactional
-    public Group createGroup(Group theGroup) {
+    public void createGroup(Group theGroup) {
         Group group = new Group();
         group.setGroupName(theGroup.getGroupName());
         group.setGroupType(theGroup.getGroupType());
-        group.setTotalExpense(theGroup.getTotalExpense());
+        group.setTotalExpense(0L);
         group.setGroupUsers(theGroup.getGroupUsers());
         group.setExpenses(null);
         group.setFinalSplits(null);
         groupRepository.save(group);
-        return group;
     }
 
     @Override
     public Group getGroupById(Long groupId) {
         return groupRepository.findById(groupId).get();
-    }
-
-    @Override
-    @Transactional
-    public List<User> addUser(Long grpId, List<User> user) {
-        Optional<Group> tempGroup = groupRepository.findById(grpId);
-        if(tempGroup.isPresent()){
-            tempGroup.get().getGroupUsers().addAll(user);
-            groupRepository.save(tempGroup.get());
-        }
-        return tempGroup.get().getGroupUsers();
     }
 
     @Override
@@ -64,6 +52,24 @@ public class GroupServiceImpl implements GroupService{
     public List<FinalSplit> getGroupFinal(Long groupId) {
         return groupRepository.findById(groupId).get().getFinalSplits();
     }
+    @Override
+    @Transactional
+    public void updateGroup(Group updatedGroup) {
+        Group tempGroup = groupRepository.findById(updatedGroup.getId()).get();
+        tempGroup.setGroupName(updatedGroup.getGroupName());
+        tempGroup.setGroupType(updatedGroup.getGroupType());
+        groupRepository.save(tempGroup);
+    }
+
+    @Override
+    @Transactional
+    public void addUser(Long grpId, List<User> user) {
+        Optional<Group> tempGroup = groupRepository.findById(grpId);
+        if(tempGroup.isPresent()){
+            tempGroup.get().getGroupUsers().addAll(user);
+            groupRepository.save(tempGroup.get());
+        }
+    }
 
     @Override
     @Transactional
@@ -71,12 +77,4 @@ public class GroupServiceImpl implements GroupService{
         groupRepository.deleteById(groupId);
     }
 
-    @Override
-    @Transactional
-    public void updateGroup(Long groupId, String newGroupName, String newGroupType) {
-        Group tempGroup = groupRepository.findById(groupId).get();
-        tempGroup.setGroupName(newGroupName);
-        tempGroup.setGroupType(newGroupType);
-        groupRepository.save(tempGroup);
-    }
 }

@@ -32,13 +32,14 @@ public class Expense {
     @Column(name="paid_by")
     private Long expPaidBy;
 
+    @JsonIgnore
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "User_Expense",
             joinColumns = {@JoinColumn(name = "expense_id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id")})
-    @JsonIgnore
     private List<User> usrSplitBtw;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "group_id")
     private Group expGrp;

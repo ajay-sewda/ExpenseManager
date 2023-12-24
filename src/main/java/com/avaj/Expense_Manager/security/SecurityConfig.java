@@ -1,47 +1,57 @@
-//package com.avaj.Expense_Manager.security;
-//
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.context.annotation.Configuration;
-//import org.springframework.http.HttpMethod;
-//import org.springframework.security.config.Customizer;
-//import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-//import org.springframework.security.crypto.password.PasswordEncoder;
-//import org.springframework.security.provisioning.JdbcUserDetailsManager;
-//import org.springframework.security.provisioning.UserDetailsManager;
-//import org.springframework.security.web.SecurityFilterChain;
-//
-//import javax.sql.DataSource;
-//
-//import static org.springframework.security.config.Customizer.withDefaults;
-//
-//@Configuration
-//public class SecurityConfig {
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
-//    @Bean
-//    public UserDetailsManager userDetailsManager(DataSource dataSource){
-//        JdbcUserDetailsManager theUserDetailsManager = new JdbcUserDetailsManager(dataSource);
-//        theUserDetailsManager
-//                .setUsersByUsernameQuery("select username,password,enabled from loginDetails where username=?");
-//        theUserDetailsManager
-//                .setAuthoritiesByUsernameQuery("select role from roles where username=?");
-//
-//        return theUserDetailsManager;
-//    }
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-//        http.authorizeHttpRequests(configurer->
-//                configurer
-//                        .requestMatchers(HttpMethod.GET,"/") .hasAnyRole("USER","ADMIN")
-//                        .requestMatchers(HttpMethod.DELETE,"/user/delete" ) .hasRole("ADMIN")
-//                        .anyRequest().authenticated());
-////                        .formLogin(form->form.loginPage("/createUser").loginProcessingUrl("/authenticateTheUser").permitAll()) .logout(logout->logout.permitAll()
-//        return http.build();
-//    }
-//
-//}
-//
-////{bcrypt}$2a$12$jq2C5gr3gNPTWeDYVyloDu/3mc1Ho1wTnwPSi0PLEV5qVhgtHGRF6
+package com.avaj.Expense_Manager.security;
+
+import com.avaj.Expense_Manager.service.UserService;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+
+@Configuration
+public class SecurityConfig {
+
+    //bcrypt bean definition
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    //authenticationProvider bean definition
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider(UserService userService) {
+        DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
+        auth.setUserDetailsService(userService); //set the custom user details service
+        auth.setPasswordEncoder(passwordEncoder()); //set the password encoder - bcrypt
+        return auth;
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationSuccessHandler customAuthenticationSuccessHandler) throws Exception {
+
+        http.authorizeHttpRequests(configurer ->
+                        configurer
+                                .requestMatchers("/").hasRole("USER")
+                                .requestMatchers("/developer/**").hasRole("DEVELOPER")
+                                .requestMatchers("/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/register/**").permitAll()
+                                .anyRequest().authenticated()
+                )
+                .formLogin(form ->
+                        form
+                                .loginPage("/showMyLoginPage")
+                                .loginProcessingUrl("/authenticateTheUser")
+                                .successHandler(customAuthenticationSuccessHandler)
+                                .permitAll()
+                )
+                .logout(logout -> logout.permitAll()
+                )
+                .exceptionHandling(configurer ->
+                        configurer.accessDeniedPage("/access-denied")
+                );
+
+        return http.build();
+    }
+
+}

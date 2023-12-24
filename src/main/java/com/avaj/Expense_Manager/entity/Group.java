@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="Group")
+@Table(name="group")
 public class Group {
 
     @Id
@@ -33,18 +33,18 @@ public class Group {
     @Column(name="total_expense")
     private Long totalExpense;
 
-    @OneToMany(mappedBy = "finalSplitGrp")
     @JsonIgnore
+    @OneToMany(mappedBy = "finalSplitGrp")
     private List<FinalSplit> finalSplits;
 
-    @OneToMany(mappedBy = "expGrp")
     @JsonIgnore
+    @OneToMany(mappedBy = "expGrp")
     private  List<Expense> expenses;
 
+    @JsonIgnore
     @ManyToMany(cascade = CascadeType.MERGE)
-    @JoinTable(name = "User_Group",
+    @JoinTable(name = "user_group",
             joinColumns = {@JoinColumn(name = "group_id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id")})
-    @JsonIgnore
     private List<User> groupUsers;
 }

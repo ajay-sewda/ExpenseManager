@@ -6,10 +6,8 @@ import com.avaj.Expense_Manager.entity.User;
 import java.util.List;
 
 public interface ExpenseService {
-    Expense createExpense(Expense theExpense);
-    void deleteExpenseById(Long expenseId);
-    List<Expense> getGroupExpenses(Long groupId);
-    void updateExpense(Expense theExpense);
+    void createExpense(Expense theExpense);
     Expense getExpenseById(Long expenseId);
-
+    void updateExpense(Expense theExpense);
+    void deleteExpenseById(Long expenseId);
 }
