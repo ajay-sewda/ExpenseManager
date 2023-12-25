@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional
-    public void createUser(User theUser) {
+    public User createUser(User theUser) {
         User user = new User();
         user.setFirstName(theUser.getFirstName());
         user.setLastName(theUser.getLastName());
@@ -40,6 +40,7 @@ public class UserServiceImpl implements UserService{
         user.setExpenses(null);
         user.setRoles(Arrays.asList(roleRepository.findByRole("ROLE_USER")));
         userRepository.save(user);
+        return user;
     }
 
     @Override
@@ -118,5 +119,12 @@ public class UserServiceImpl implements UserService{
         }
 
         return authorities;
+    }
+    public User updateUser(User user){
+        User theUser = userRepository.findByUserName(user.getUserName());
+        theUser.setUserGroups(user.getUserGroups());
+        theUser.setExpenses(user.getExpenses());
+        userRepository.save(theUser);
+        return theUser;
     }
 }

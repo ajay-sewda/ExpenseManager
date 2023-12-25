@@ -31,7 +31,7 @@ public class Group {
     private String groupType;
 
     @Column(name="total_expense")
-    private Long totalExpense;
+    private Float totalExpense=0F;
 
     @JsonIgnore
     @OneToMany(mappedBy = "finalSplitGrp")

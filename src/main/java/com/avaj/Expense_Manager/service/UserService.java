@@ -10,11 +10,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import java.util.List;
 
 public interface UserService extends UserDetailsService {
-    void createUser(User theUser);
+    User createUser(User theUser);
     User getUserById(Long userId);
     User getUserByUserName(String userName);
     List<User> getAllUsers();
     List<Group> getUserGroups(Long userId);
+     User updateUser(User user);
     List<Expense> getUserExpenses(Long userId);
     void updateUserDetails(User theUser);
     void updateUserCredentials(User theUser);
