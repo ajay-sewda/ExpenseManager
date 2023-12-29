@@ -10,6 +10,14 @@
 </head>
 
 <body>
+<nav class="navbar navbar-expand-md bg-dark navbar-dark fixed-top">
+    <!-- Logo -->
+    <a class="navbar-brand" th:href="@{/}">
+        <img th:src="@{/images/logo.png}" alt="Expense Manager Logo" height="30">
+    </a>
+    <a class="navbar-brand" th:href="@{/}">Expense Manager</a>
+
+</nav>
 <div class="container mt-5">
     <h2>Update Expense</h2>
     <form th:action="@{/expense/update}" method="post" th:object="${expense}">

@@ -20,6 +20,13 @@ public interface UserService extends UserDetailsService {
     void updateUserCredentials(User theUser);
     User updateUser(User user);
     void deleteUserById(Long userId);
+//    Password reset methods
+    String generateResetToken();
+    void createPasswordResetTokenForUser(User user, String token);
+    boolean isValidPasswordResetToken(String token);
+   void resetUserPassword(String token, String newPassword);
+   void changeUserPassword(String username, String newPassword);
+   boolean isValidOldPassword(String username, String oldPassword);
 
 
     @Override

@@ -6,6 +6,14 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
+<nav class="navbar navbar-expand-md bg-dark navbar-dark fixed-top">
+    <!-- Logo -->
+    <a class="navbar-brand" th:href="@{/}">
+        <img th:src="@{/images/logo.png}" alt="Expense Manager Logo" height="30">
+    </a>
+    <a class="navbar-brand" th:href="@{/}">Expense Manager</a>
+
+</nav>
 
 <div class="container-fluid d-flex justify-content-center align-items-center vh-100">
     <div class="col-lg-6">
@@ -49,7 +57,7 @@
                 <div class="form-group">
                     <label for="groupUsers">Group Members</label>
                     <select id="groupUsers" class="custom-select" th:field="*{groupUsers}" multiple required>
-                        <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.userName}"></option>
+                        <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.firstName}"></option>
                     </select>
                 </div>
 

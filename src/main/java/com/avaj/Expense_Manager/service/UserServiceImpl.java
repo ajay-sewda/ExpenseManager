@@ -127,4 +127,43 @@ public class UserServiceImpl implements UserService{
 
         return authorities;
     }
+    @Override
+    public String generateResetToken() {
+        return UUID.randomUUID().toString(); // Generate a random UUID as the reset token
+    }
+
+    @Override
+    public void createPasswordResetTokenForUser(User user, String token) {
+        user.setResetToken(token);
+        userRepository.save(user); // Save the user entity with the reset token
+    }
+
+    @Override
+    public boolean isValidPasswordResetToken(String token) {
+        User user = userRepository.findByResetToken(token);
+        return user != null; // Check if user with the token exists
+    }
+    public boolean isValidOldPassword(String username, String oldPassword) {
+        User user = userRepository.findByUserName(username);
+        if (user != null) {
+            return passwordEncoder.matches(oldPassword, user.getPassword());
+        }
+        return false;
+    }
+    public void changeUserPassword(String username, String newPassword) {
+        User user = userRepository.findByUserName(username);
+        if (user != null) {
+            user.setPassword(passwordEncoder.encode(newPassword));
+            userRepository.save(user);
+        }
+    }
+    @Override
+    public void resetUserPassword(String token, String newPassword) {
+        User user = userRepository.findByResetToken(token);
+        if (user != null) {
+            user.setPassword(passwordEncoder.encode(newPassword)); // Set the new password
+            user.setResetToken(null); // Clear the reset token after password reset
+            userRepository.save(user); // Save the updated user entity
+        }
+    }
 }

@@ -10,7 +10,15 @@
 </head>
 
 <body>
-<div class="container mt-5">
+<nav class="navbar navbar-expand-md bg-dark navbar-dark fixed-top">
+    <!-- Logo -->
+    <a class="navbar-brand" th:href="@{/}">
+        <img th:src="@{/images/logo.png}" alt="Expense Manager Logo" height="30">
+    </a>
+    <a class="navbar-brand" th:href="@{/}">Expense Manager</a>
+
+</nav>
+<div class="container mt-5" style="padding-top: 70px;">
     <h2>Add Expense</h2>
     <form action="#" th:action="@{/expense/process}" th:object="${expense}" method="post">
         <div class="form-group">
@@ -36,7 +44,7 @@
             <div class="form-check">
                 <div th:each="user : ${groupUsers}">
                     <input type="checkbox" class="form-check-input" th:id="${'userCheckbox_' + user.id}" th:name="usrSplitBtw" th:value="${user.id}">
-                    <label class="form-check-label" th:for="${'userCheckbox_' + user.id}" th:text="${user.userName}"></label>
+                    <label class="form-check-label" th:for="${'userCheckbox_' + user.id}" th:text="${user.firstName}"></label>
                 </div>
             </div>
         </div>

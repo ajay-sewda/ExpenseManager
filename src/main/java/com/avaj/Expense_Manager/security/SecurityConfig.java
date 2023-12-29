@@ -33,9 +33,13 @@ public class SecurityConfig {
         http.authorizeHttpRequests(configurer ->
                         configurer
                                 .requestMatchers("/").hasRole("USER")
+                                .requestMatchers("/changePassword").hasRole("USER")
                                 .requestMatchers("/developer/**").hasRole("DEVELOPER")
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/register/**").permitAll()
+                                .requestMatchers("/forgotPassword/**").permitAll()
+                                .requestMatchers("/passwordResetSuccess").permitAll()
+                                .requestMatchers("/invalidToken").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .formLogin(form ->
