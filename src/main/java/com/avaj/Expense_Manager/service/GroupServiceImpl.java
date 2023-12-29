@@ -26,7 +26,6 @@ public class GroupServiceImpl implements GroupService{
         Group group = new Group();
         group.setGroupName(theGroup.getGroupName());
         group.setGroupType(theGroup.getGroupType());
-        group.setTotalExpense(0L);
         group.setGroupUsers(theGroup.getGroupUsers());
         group.setExpenses(null);
         group.setFinalSplits(null);
@@ -55,10 +54,18 @@ public class GroupServiceImpl implements GroupService{
     @Override
     @Transactional
     public void updateGroup(Group updatedGroup) {
+        Long id=updatedGroup.getId();
         Group tempGroup = groupRepository.findById(updatedGroup.getId()).get();
         tempGroup.setGroupName(updatedGroup.getGroupName());
         tempGroup.setGroupType(updatedGroup.getGroupType());
         groupRepository.save(tempGroup);
+    }
+
+    @Override
+    public void updateTotalExpense(Group theGroup, Float expense) {
+       Group updatedGroup = groupRepository.findById(theGroup.getId()).get();
+       updatedGroup.setTotalExpense(theGroup.getTotalExpense()+expense);
+       groupRepository.save(updatedGroup);
     }
 
     @Override

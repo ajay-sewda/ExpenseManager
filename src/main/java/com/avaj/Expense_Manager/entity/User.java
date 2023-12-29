@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="User")
+@Table(name="user")
 public class User {
 
     @Id
@@ -33,7 +34,7 @@ public class User {
     private String password;
 
     @Column(name = "enabled")
-    private boolean enabled;
+    private boolean enabled = true;
 
     @Column(name = "first_name")
     @NotNull(message = "is required")

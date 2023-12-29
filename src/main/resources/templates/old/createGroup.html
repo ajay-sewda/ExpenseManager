@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Group</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container-fluid d-flex justify-content-center align-items-center vh-100">
+    <div class="col-lg-6">
+        <div class="card p-4">
+            <h2 class="text-primary mb-4">Create Group</h2>
+
+            <form th:action="@{/group/processGroup}" method="POST" th:object="${group}">
+                <div class="form-group">
+                    <label for="groupName">Group Name</label>
+                    <input type="text" id="groupName" class="form-control" th:field="*{groupName}" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Group Type</label><br>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" th:field="*{groupType}" th:value="Travel" id="travel" required>
+                        <label class="form-check-label" for="travel">Travel</label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" th:field="*{groupType}" th:value="Flatmates" id="flatmates" required>
+                        <label class="form-check-label" for="flatmates">Flatmates</label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" th:field="*{groupType}" th:value="Food" id="food" required>
+                        <label class="form-check-label" for="food">Food</label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" th:field="*{groupType}" th:value="Party" id="party" required>
+                        <label class="form-check-label" for="party">Party</label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" th:field="*{groupType}" th:value="Other" id="other" required>
+                        <label class="form-check-label" for="other">Other</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="groupUsers">Group Members</label>
+                    <select id="groupUsers" class="custom-select" th:field="*{groupUsers}" multiple required>
+                        <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.userName}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

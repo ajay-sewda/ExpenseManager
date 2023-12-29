@@ -26,7 +26,7 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`first_name`, `last_name`,`username`,`password`,`enabled`)
 VALUES 
-('Ajay','Kumar','ajay@gmail.com','{bcrypt}$2a$12$jq2C5gr3gNPTWeDYVyloDu/3mc1Ho1wTnwPSi0PLEV5qVhgtHGRF6',1);
+('Ajay','Kumar','ajay','$2a$12$jq2C5gr3gNPTWeDYVyloDu/3mc1Ho1wTnwPSi0PLEV5qVhgtHGRF6',1);
 
 --
 -- Table structure for table `role`

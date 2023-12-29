@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Expense</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+<div class="container mt-5">
+    <h2>Update Expense</h2>
+    <form th:action="@{/expense/update}" method="post" th:object="${expense}">
+        <input type="hidden" th:field="*{id}">
+        <input type="hidden" name="expGrp" th:value="${expense.expGrp.id}">
+        <div class="form-group">
+            <label>Description:</label>
+            <input type="text" class="form-control" th:field="*{expName}">
+        </div>
+        <div class="form-group">
+            <label for="date">Date:</label>
+            <input type="date" class="form-control" id="date" th:field="*{date}" required>
+        </div>
+        <div class="form-group">
+            <label>Amount:</label>
+            <input type="text" class="form-control" th:field="*{expAmt}">
+        </div>
+        <div class="form-group">
+            <label for="paidBy">Paid By:</label>
+            <select class="form-control" id="paidBy" th:field="*{expPaidBy}">
+                <option th:each="user : ${groupUsers}" th:value="${user.id}" th:text="${user.userName}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Split Between</label>
+            <div class="form-check">
+                <div th:each="user : ${groupUsers}">
+                    <input type="checkbox" class="form-check-input" th:id="${'userCheckbox_' + user.id}" th:name="usrSplitBtw" th:value="${user.id}" th:checked="${#lists.contains(expense.usrSplitBtw, user)}">
+                    <label class="form-check-label" th:for="${'userCheckbox_' + user.id}" th:text="${user.userName}"></label>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Update Expense</button>
+        <a th:href="@{/group/details(groupId=${expense.expGrp.id})}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+<!-- Bootstrap JS -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+</body>
+
+</html>

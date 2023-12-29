@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="group")
+@Table(name="`group`")
 public class Group {
 
     @Id
@@ -31,18 +32,18 @@ public class Group {
     private String groupType;
 
     @Column(name="total_expense")
-    private Long totalExpense;
+    private Float totalExpense=0F;
 
     @JsonIgnore
     @OneToMany(mappedBy = "finalSplitGrp")
     private List<FinalSplit> finalSplits;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "expGrp")
+    @OneToMany(mappedBy = "expGrp",cascade = CascadeType.ALL)
     private  List<Expense> expenses;
 
     @JsonIgnore
-    @ManyToMany(cascade = CascadeType.MERGE)
+    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
     @JoinTable(name = "user_group",
             joinColumns = {@JoinColumn(name = "group_id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id")})

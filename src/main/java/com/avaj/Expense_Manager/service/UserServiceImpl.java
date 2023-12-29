@@ -89,6 +89,14 @@ public class UserServiceImpl implements UserService{
         });
     }
 
+    public User updateUser(User user){
+        User theUser = userRepository.findByUserName(user.getUserName());
+        theUser.setUserGroups(user.getUserGroups());
+        theUser.setExpenses(user.getExpenses());
+        userRepository.save(theUser);
+        return theUser;
+    }
+
     @Override
     @Transactional
     public void deleteUserById(Long userId) {

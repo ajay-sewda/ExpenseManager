@@ -18,6 +18,7 @@ public interface UserService extends UserDetailsService {
     List<Expense> getUserExpenses(Long userId);
     void updateUserDetails(User theUser);
     void updateUserCredentials(User theUser);
+    User updateUser(User user);
     void deleteUserById(Long userId);
 
 

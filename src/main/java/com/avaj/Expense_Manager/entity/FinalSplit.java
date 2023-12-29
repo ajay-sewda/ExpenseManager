@@ -3,10 +3,11 @@ package com.avaj.Expense_Manager.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 @Entity
 @Data
-@Table(name="FinalSplit")
+@Table(name="finalsplit")
 public class FinalSplit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

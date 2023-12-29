@@ -12,10 +12,10 @@
 <body>
 <div class="container mt-5">
     <h2>Add Expense</h2>
-    <form action="#" th:action="@{/expenses/add}" th:object="${expense}" method="post">
+    <form action="#" th:action="@{/expense/process}" th:object="${expense}" method="post">
         <div class="form-group">
             <label for="description">Description:</label>
-            <input type="text" class="form-control" id="description" th:field="*{description}" required>
+            <input type="text" class="form-control" id="description" th:field="*{expName}" required>
         </div>
         <div class="form-group">
             <label for="date">Date:</label>
@@ -23,22 +23,34 @@
         </div>
         <div class="form-group">
             <label for="amount">Amount:</label>
-            <input type="number" class="form-control" id="amount" th:field="*{amount}" required>
+            <input type="number" class="form-control" id="amount" th:field="*{expAmt}" required>
         </div>
         <div class="form-group">
             <label for="paidBy">Paid By:</label>
-            <select class="form-control" id="paidBy" th:field="*{paidBy}">
+            <select class="form-control" id="paidBy" th:field="*{expPaidBy}">
                 <option th:each="user : ${groupUsers}" th:value="${user.id}" th:text="${user.userName}"></option>
             </select>
         </div>
+        <div class="form-group">
+            <label>Split Between</label>
+            <div class="form-check">
+                <div th:each="user : ${groupUsers}">
+                    <input type="checkbox" class="form-check-input" th:id="${'userCheckbox_' + user.id}" th:name="usrSplitBtw" th:value="${user.id}">
+                    <label class="form-check-label" th:for="${'userCheckbox_' + user.id}" th:text="${user.userName}"></label>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" name="expGrp" th:value="${expense.expGrp.id}">
         <button type="submit" class="btn btn-primary">Add Expense</button>
-        <a th:href="@{/group/details/{groupId}(groupId=${groupId})}" class="btn btn-secondary">Back to Group Details</a>
+        <a th:href="@{/group/details(groupId=${expense.expGrp.id})}" class="btn btn-secondary">Back to Group Details</a>
     </form>
 </div>
 <!-- Bootstrap JS -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
 </body>
 
 </html>
