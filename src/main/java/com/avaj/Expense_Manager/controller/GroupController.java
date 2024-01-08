@@ -18,6 +18,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -86,5 +88,48 @@ public String updateGroup(@Valid @ModelAttribute("group") Group group) {
         groupService.deleteGroup(groupId);
         return "redirect:/";
     }
+
+//    balances
+    @GetMapping("/balances")
+    public String showBalances(@RequestParam("groupId") Long groupId, Model theModel,Principal principal){
+        User user = userService.getUserByUserName(principal.getName());
+        List<FinalSplit> finalSplits =finalSplitService.getFinalSplit(groupId);
+        theModel.addAttribute("finalSplits",finalSplits);
+        Group group = groupService.getGroupById(groupId);
+        theModel.addAttribute("group", group);
+        theModel.addAttribute("userId",user.getId());
+        return "balances";
+    }
+    @GetMapping("/settleUp")
+    public String showSettleUpPage(@RequestParam("groupId") Long groupId, Model theModel, Principal principal){
+        User user = userService.getUserByUserName(principal.getName());
+        List<FinalSplit> finalSplits = new ArrayList<>();
+        for(FinalSplit tempFinalSplit:finalSplitService.getFinalSplit(groupId)){
+            if(user.getId()==tempFinalSplit.getFinalPayTo() || user.getId()==tempFinalSplit.getFinalPayBy()){
+                finalSplits.add(tempFinalSplit);
+            }
+        }
+        Group group = groupService.getGroupById(groupId);
+        theModel.addAttribute("finalSplits",finalSplits);
+        theModel.addAttribute("group", group);
+        theModel.addAttribute("userId",user.getId());
+        return "settleUp";
+    }
+    @PostMapping("/settleUp")
+    public String processSettleUp(@RequestParam("finalSplitId") Long finalSplitId,@ModelAttribute("finalSplits") List<FinalSplit> finalSplits){
+        Long groupId = finalSplits.get(0).getFinalSplitGrp().getId();
+        finalSplitService.deleteFinalSplit(finalSplitId);
+        return "redirect:/group/settleUp?groupId=" + groupId;
+    }
+    @PostMapping("/settleUpAll")
+    public String processSettleAll(@ModelAttribute("finalSplits") List<FinalSplit> finalSplits){
+        Long groupId = finalSplits.get(0).getFinalSplitGrp().getId();
+        for(FinalSplit tempFinalSplit: finalSplits){
+            finalSplitService.deleteFinalSplit(tempFinalSplit.getId());
+        }
+        return "redirect:/group/settleUp?groupId=" + groupId;
+    }
+//    @GetMapping("/addMember")
+//    public String
 }
 

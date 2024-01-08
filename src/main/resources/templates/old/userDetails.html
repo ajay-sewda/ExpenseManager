@@ -49,11 +49,11 @@
                     <div class="row">
                         <div class="col-12 mb-2">
                             <!-- Update Details button -->
-                            <a class="btn btn-primary btn-block" th:href="@{/user/updateDetails}">Update Details</a>
+                            <a class="btn btn-primary btn-block" th:href="@{/profile/updateDetails}">Update Details</a>
                         </div>
                         <div class="col-12">
                             <!-- Update Password button -->
-                            <a class="btn btn-warning btn-block" th:href="@{/user/updatePassword}">Update Password</a>
+                            <a class="btn btn-warning btn-block" th:href="@{/changePassword}">Update Password</a>
                         </div>
                     </div>
                 </div>
@@ -61,11 +61,11 @@
                     <div class="row">
                         <div class="col-12 mb-2">
                             <!-- Disable Account button -->
-                            <a class="btn btn-danger btn-block" th:href="@{/user/disableAccount}">Disable Account</a>
+                            <a class="btn btn-danger btn-block" th:href="@{/profile/disableAccount}" onclick="if(!(confirm('Are You Sure, You want to disable Expense Manager Account?'))) return false">Disable Account</a>
                         </div>
                         <div class="col-12">
                             <!-- Permanently Delete Account button -->
-                            <a class="btn btn-danger btn-block" th:href="@{/user/deleteAccount}">Permanently Delete Account</a>
+                            <a class="btn btn-danger btn-block" th:href="@{/profile/delete}" onclick="if(!(confirm('Are You Sure, You want to delete Expense Manager Account?'))) return false">Permanently Delete Account</a>
                         </div>
                     </div>
                 </div>

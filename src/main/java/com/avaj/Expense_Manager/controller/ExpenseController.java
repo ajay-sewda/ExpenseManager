@@ -3,6 +3,7 @@ package com.avaj.Expense_Manager.controller;
 import com.avaj.Expense_Manager.entity.Expense;
 import com.avaj.Expense_Manager.entity.User;
 import com.avaj.Expense_Manager.service.ExpenseService;
+import com.avaj.Expense_Manager.service.FinalSplitService;
 import com.avaj.Expense_Manager.service.GroupService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -19,35 +23,38 @@ public class ExpenseController {
 
     private ExpenseService expenseService;
     private GroupService groupService;
-
+    private FinalSplitService finalSplitService;
     @Autowired
-    public ExpenseController(ExpenseService expenseService,GroupService groupService) {
+    public ExpenseController(ExpenseService expenseService, GroupService groupService, FinalSplitService finalSplitService) {
         this.expenseService = expenseService;
-        this.groupService =groupService;
+        this.groupService = groupService;
+        this.finalSplitService = finalSplitService;
     }
 
     @GetMapping("/create")
     public String showAddExpenseForm(@RequestParam("groupId") Long groupId, Model theModel) {
         Expense expense = new Expense();
         expense.setExpGrp(groupService.getGroupById(groupId));
+        expense.setDate(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
         List<User> groupUsers = groupService.getGroupUsers(groupId);
         theModel.addAttribute("groupUsers",groupUsers);
         theModel.addAttribute("expense",expense);
-        return "old/addExpense"; // Assuming addExpense.html Thymeleaf template exists
+        return "old/addExpense";
     }
 
     @PostMapping("/process")
     public String addExpense(@ModelAttribute("expense") Expense expense) {
         expenseService.createExpense(expense);
+        finalSplitService.updateFinalSplit(expense.getExpGrp().getId());
         return "redirect:/group/details?groupId=" + expense.getExpGrp().getId();
     }
 
-    @GetMapping("/edit/{id}")
-    public String showUpdateExpenseForm(@RequestParam("expenseId") long expenseId, Model model) {
-        Expense expense = expenseService.getExpenseById(expenseId);
-        model.addAttribute("expense", expense);
-        return "old/updateExpense"; // Assuming updateExpense.html Thymeleaf template exists
-    }
+//    @GetMapping("/edit/{id}")
+//    public String showUpdateExpenseForm(@RequestParam("expenseId") long expenseId, Model model) {
+//        Expense expense = expenseService.getExpenseById(expenseId);
+//        model.addAttribute("expense", expense);
+//        return "old/updateExpense";
+//    }
 
     @GetMapping("/update")
     public String showUpdateExpenseForm(@RequestParam("expenseId") Long expenseId, Model theModel) {
@@ -55,11 +62,12 @@ public class ExpenseController {
         List<User> groupUsers = expense.getExpGrp().getGroupUsers();
         theModel.addAttribute("groupUsers",groupUsers);
         theModel.addAttribute("expense",expense);
-        return "old/updateExpense"; // Assuming addExpense.html Thymeleaf template exists
+        return "old/updateExpense";
     }
     @PostMapping("/update")
     public String updateExpense(@Valid @ModelAttribute("expense") Expense expense) {
         expenseService.updateExpense(expense);
+        finalSplitService.updateFinalSplit(expense.getExpGrp().getId());
         return "redirect:/group/details?groupId=" + expense.getExpGrp().getId();
     }
 
@@ -67,6 +75,7 @@ public class ExpenseController {
     public String deleteExpense(@RequestParam("expenseId") long expenseId) {
         Long id=expenseService.getExpenseById(expenseId).getExpGrp().getId();
         expenseService.deleteExpenseById(expenseId);
+        finalSplitService.updateFinalSplit(id);
         return "redirect:/group/details?groupId=" + id;
     }
 }

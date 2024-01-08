@@ -32,6 +32,19 @@ public class FinalSplitServiceImpl implements FinalSplitService {
     @Transactional
     public List<FinalSplit> getFinalSplit(Long groupId) {
         Group group = groupService.getGroupById(groupId);
+        return finalSplitRepository.findByFinalSplitGrp(group);
+    }
+
+    @Override
+    public void updateFinalSplit(Long groupId) {
+        Group group = groupService.getGroupById(groupId);
+        finalSplitRepository.deleteAllByFinalSplitGrp(group);
+        createFinalSplits(groupId);
+    }
+
+    @Override
+    public void createFinalSplits(Long groupId) {
+        Group group = groupService.getGroupById(groupId);
         List<User> users = group.getGroupUsers();
         List<Expense> expenses = group.getExpenses();
 
@@ -79,7 +92,12 @@ public class FinalSplitServiceImpl implements FinalSplitService {
         }
 
         // Save the final splits to the repository
-        return finalSplitRepository.saveAll(finalSplits);
+        finalSplitRepository.saveAll(finalSplits);
+    }
+
+    @Override
+    public void deleteFinalSplit(Long finalSplitId) {
+        finalSplitRepository.deleteById(finalSplitId);
     }
 }
 

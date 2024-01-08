@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Account Feedback</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+<div class="container mt-5" style="margin-top: 70px;">
+    <h2 class="text-center mb-4">Account Deletion Feedback</h2>
+    <form th:action="@{/deleteAccountFeedback}" method="post" th:object="${feedBack}">
+        <div class="form-group">
+            <label for="feedback">Please provide feedback about your account deletion:</label>
+            <textarea class="form-control" id="feedback" name="feedback" rows="5" placeholder="Your feedback"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="reason">What was the reason for deleting your account?</label>
+            <select class="form-control" id="reason" name="reason">
+                <option value="personal">Personal reasons</option>
+                <option value="service">Dissatisfied with service</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+        <div class="form-group" id="otherReason" style="display: none;">
+            <label for="otherReasonText">Please specify:</label>
+            <input type="text" class="form-control" id="otherReasonText" name="otherReason">
+        </div>
+        <button type="submit" class="btn btn-danger">Submit Feedback</button>
+    </form>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    // Show 'other' reason input field when 'Other' is selected
+    $(document).ready(function(){
+      $('#reason').change(function(){
+        if ($(this).val() === 'other') {
+          $('#otherReason').show();
+        } else {
+          $('#otherReason').hide();
+        }
+      });
+    });
+</script>
+</body>
+
+</html>

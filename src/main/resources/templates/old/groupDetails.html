@@ -18,7 +18,7 @@
     <a class="navbar-brand" th:href="@{/}">Expense Manager</a>
 
 </nav>
-<div class="container">
+<div class="container" style="margin-top: 70px;">
     <div class="mt-4">
         <h2 class="text-center" th:text="${group.groupName}"></h2>
         <hr>
@@ -52,8 +52,23 @@
             </p>
         </ul>
     </div>
-    <a th:href="@{/expense/create(groupId=${group.id})}" class="btn btn-primary btn-sm mb-3">Add Expense</a>
+    <hr>
+    <div class="row">
+        <!-- Side by side elements -->
+        <div class="col-md-6">
+            <!-- Create Expense button -->
+            <a th:href="@{/expense/create(groupId=${group.id})}" class="btn btn-primary btn-sm mb-3">Add Expense</a>
+            <a th:href="@{/group/addMember(groupId=${group.id})}" class="btn btn-success btn-sm mb-3">Add Member</a>
+        </div>
 
+        <div class="col-md-6">
+            <!-- Balances and Settle Up buttons -->
+            <div class="text-md-end">
+                <a th:href="@{/group/balances(groupId=${group.id})}" class="btn btn-success btn-sm me-2">Balances</a>
+                <a th:href="@{/group/settleUp(groupId=${group.id})}" class="btn btn-warning btn-sm">Settle Up</a>
+            </div>
+        </div>
+    </div>
     <table class="table table-bordered table-striped">
         <thead class="table-dark">
         <tr>

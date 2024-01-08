@@ -1,9 +1,6 @@
 package com.avaj.Expense_Manager.service;
 
-import com.avaj.Expense_Manager.entity.Expense;
-import com.avaj.Expense_Manager.entity.Group;
-import com.avaj.Expense_Manager.entity.Role;
-import com.avaj.Expense_Manager.entity.User;
+import com.avaj.Expense_Manager.entity.*;
 import com.avaj.Expense_Manager.repository.RoleRepository;
 import com.avaj.Expense_Manager.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -68,6 +65,19 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public Boolean isSettledUp(String username) {
+        User user = userRepository.findByUserName(username);
+        for(Group tempGroup:user.getUserGroups()){
+            for(FinalSplit tempFinalSplit:tempGroup.getFinalSplits()){
+                if(user.getId()==tempFinalSplit.getFinalPayBy() || user.getId()==tempFinalSplit.getFinalPayTo()){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    @Override
     @Transactional
     public void updateUserDetails(User theUser) {
         Optional<User> optionalUser = userRepository.findById(theUser.getId());
@@ -77,6 +87,39 @@ public class UserServiceImpl implements UserService{
             userRepository.save(user);
         });
     }
+
+    @Override
+    public void updateRole(User user, Role role) {
+        User theUser = userRepository.findById(user.getId()).orElse(null);
+        if (theUser != null) {
+            // Remove existing roles associated with the user
+            theUser.getRoles().clear();
+            userRepository.save(theUser);
+
+            // Fetch the new role by ID
+            Role fetchedRole = roleRepository.findById(role.getId()).orElse(null);
+            if (fetchedRole != null) {
+                switch (fetchedRole.getRole()) {
+                    case "ROLE_USER":
+                        theUser.getRoles().add(fetchedRole);
+                        break;
+                    case "ROLE_DEVELOPER":
+                        theUser.getRoles().addAll(Arrays.asList(
+                                roleRepository.findByRole("ROLE_USER"),
+                                fetchedRole));
+                        break;
+                    case "ROLE_ADMIN":
+                        theUser.getRoles().addAll(Arrays.asList(
+                                roleRepository.findByRole("ROLE_USER"),
+                                roleRepository.findByRole("ROLE_DEVELOPER"),
+                                fetchedRole));
+                        break;
+                }
+                userRepository.save(theUser);
+            }
+        }
+    }
+
 
     @Override
     @Transactional
@@ -89,18 +132,18 @@ public class UserServiceImpl implements UserService{
         });
     }
 
-    public User updateUser(User user){
-        User theUser = userRepository.findByUserName(user.getUserName());
-        theUser.setUserGroups(user.getUserGroups());
-        theUser.setExpenses(user.getExpenses());
-        userRepository.save(theUser);
-        return theUser;
+    @Override
+    public void disableUser(String username) {
+       User user = userRepository.findByUserName(username);
+       user.setEnabled(false);
+       userRepository.save(user);
     }
 
     @Override
     @Transactional
-    public void deleteUserById(Long userId) {
-        userRepository.deleteById(userId);
+    public void deleteUser(String username) {
+        User user = userRepository.findByUserName(username);
+        userRepository.deleteById(user.getId());
     }
 
     @Override

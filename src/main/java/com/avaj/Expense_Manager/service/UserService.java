@@ -2,6 +2,7 @@ package com.avaj.Expense_Manager.service;
 
 import com.avaj.Expense_Manager.entity.Expense;
 import com.avaj.Expense_Manager.entity.Group;
+import com.avaj.Expense_Manager.entity.Role;
 import com.avaj.Expense_Manager.entity.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,10 +17,12 @@ public interface UserService extends UserDetailsService {
     List<User> getAllUsers();
     List<Group> getUserGroups(Long userId);
     List<Expense> getUserExpenses(Long userId);
+    Boolean isSettledUp(String username);
     void updateUserDetails(User theUser);
+    void updateRole(User user, Role role);
     void updateUserCredentials(User theUser);
-    User updateUser(User user);
-    void deleteUserById(Long userId);
+    void disableUser(String username);
+    void deleteUser(String username);
 //    Password reset methods
     String generateResetToken();
     void createPasswordResetTokenForUser(User user, String token);

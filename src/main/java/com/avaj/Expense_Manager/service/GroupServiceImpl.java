@@ -46,11 +46,6 @@ public class GroupServiceImpl implements GroupService{
     public List<Expense> getGroupExpenses(Long groupId) {
         return groupRepository.findById(groupId).get().getExpenses();
     }
-
-    @Override
-    public List<FinalSplit> getGroupFinal(Long groupId) {
-        return groupRepository.findById(groupId).get().getFinalSplits();
-    }
     @Override
     @Transactional
     public void updateGroup(Group updatedGroup) {

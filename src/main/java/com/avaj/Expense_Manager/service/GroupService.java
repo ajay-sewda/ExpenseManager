@@ -11,7 +11,6 @@ public interface GroupService {
     Group getGroupById(Long groupId);
     List<User> getGroupUsers(Long groupId);
     List<Expense> getGroupExpenses(Long groupId);
-    List<FinalSplit> getGroupFinal(Long groupId);
     void addUser(Long grpId, List<User> user);
     void updateGroup(Group theGroup);
     void updateTotalExpense(Group theGroup,Float expense);

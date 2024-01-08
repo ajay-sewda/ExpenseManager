@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-md bg-dark navbar-dark fixed-top">
+    <!-- Logo -->
+    <a class="navbar-brand" th:href="@{/}">
+        <img th:src="@{/images/logo.png}" alt="Expense Manager Logo" height="30">
+    </a>
+    <a class="navbar-brand" th:href="@{/}">Expense Manager</a>
+
+</nav>
+
+<div class="container mt-4" style="padding-top: 70px;">
+    <h1>Welcome to Admin Dashboard</h1>
+
+    <!-- Display Total Number of Users -->
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-header">Total Users</div>
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${#lists.size(users)}"></h5>
+                    <!-- Add more user-related statistics if needed -->
+                </div>
+            </div>
+        </div>
+        <!-- Add more statistics or features here -->
+    </div>
+
+    <!-- Display Total Number of Feedbacks -->
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-header">Total Feedbacks</div>
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${#lists.size(feedBacks)}"></h5>
+                    <!-- Add more feedback-related statistics if needed -->
+                </div>
+            </div>
+        </div>
+        <!-- Add more statistics or features here -->
+    </div>
+
+    <!-- Buttons to Get User List and Feedback List -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <a href="#userList" class="btn btn-primary">View User List</a>
+        </div>
+        <div class="col-md-6">
+            <a href="#feedbacks" class="btn btn-primary">View Feedbacks</a>
+        </div>
+    </div>
+
+    <!-- User List Section -->
+    <section id="userList" class="mt-4">
+        <h2>User List</h2>
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Role/s</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="tempUser: ${users}">
+                <td th:text="${tempUser.firstName}"/>
+                <td th:text="${tempUser.lastName}"/>
+                <td th:text="${tempUser.userName}"/>
+                <td>
+                    <span th:each="tempRole: ${tempUser.roles}">
+                    <span th:if="${tempRole.role==ROLE_ADMIN}">Admin</span>
+                    <span th:if="${tempRole.role==ROLE_DEVELOPER}">Developer</span>
+                    <span th:if="${tempRole.role==ROLE_USER}">User</span>
+                    </span>
+                <td/>
+                <td>
+                    <a th:href="@{/admin/updateRole(userId=${tempUser.id})}"
+                       class="btn btn-info btn-sm">Update Role</a>
+                    <a th:href="@{/admin/delete(userId=${tempUser.id})}"
+                       class="btn btn-danger btn-sm"
+                       onclick="if(!(confirm('Are You Sure, You want to disable this User?'))) return false">
+                        Disable</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Feedbacks Section -->
+    <section id="feedbacks" class="mt-4">
+        <h2>Feedbacks</h2>
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+            <tr>
+                <th>Id</th>
+                <th>FeedBack</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="tempFeedback: ${feedBacks}">
+                <td th:text="${tempFeedback.id}"/>
+                <td th:text="${tempFeedback.feedBack}"/>
+                <td>
+                    <a th:href="@{/admin/deleteFeedback(feedBackId=${tempFeedback.id})}"
+                       class="btn btn-danger btn-sm"
+                       onclick="if(!(confirm('Are You Sure, You want to delete this Feedback?'))) return false">
+                        Delete</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</div>
+
+</body>
+</html>

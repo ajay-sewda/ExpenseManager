@@ -49,8 +49,21 @@
             margin-bottom: 5px;
             font-size: 14px;
         }
+        .text-link {
+        text-decoration: none; /* Remove underline */
+        color: inherit; /* Use the default text color */
+        transition: font-size 0.3s; /* Smooth transition for font size change */
+        }
+
+         /* CSS for hover effect */
+        .text-link:hover {
+        font-size: 110%; /* Increase font size on hover */
+        text-decoration: underline; /* Underline on hover */
+        color: blue; /* Change color on hover */
+        }
     </style>
 </head>
+<body>
 <nav class="navbar navbar-expand-md bg-dark navbar-dark fixed-top">
     <!-- Logo -->
     <a class="navbar-brand" th:href="@{/}">
@@ -59,8 +72,7 @@
     <a class="navbar-brand" th:href="@{/}">Expense Manager</a>
 
 </nav>
-<body style="padding-top: 70px;">
-<div class="container">
+<div class="container" style="margin-top: 70px;">
 
     <div>
     <p>Welcome <span th:text="${user.firstName}"></span>!</p>
@@ -75,7 +87,6 @@
 
     <!-- Buttons for various actions -->
     <a th:href="@{/profile/edit}" class="btn btn-primary btn-sm mb-3">Edit Profile</a>
-    <a th:href="@{/changePassword}" class="btn btn-warning btn-sm mb-3">Reset Password</a>
     <a th:href="@{/group/create}" class="btn btn-success btn-sm mb-3">Create Group</a>
 
     <!-- Table displaying user groups -->
@@ -91,7 +102,7 @@
         <tbody>
         <tr th:each="tempGroup: ${user.userGroups}">
             <td>
-                <a th:href="@{/group/details(groupId=${tempGroup.id})}" class="text-link">
+                <a th:href="@{/group/details(groupId=${tempGroup.id})}" class="text-link" >
                     <span th:text="${tempGroup.groupName}" />
                 </a>
             </td>
@@ -113,11 +124,11 @@
             <div class="row">
                 <div class="col-6 mb-2" sec:authorize="hasRole('DEVELOPER')">
                     <!-- Developer Dashboard button -->
-                    <a class="btn btn-primary btn-block" th:href="@{/developers}">Developer Dashboard</a>
+                    <a class="btn btn-primary btn-block" th:href="@{/developers/devboard}">Developer Dashboard</a>
                 </div>
                 <div class="col-6 mb-2" sec:authorize="hasRole('ADMIN')">
                     <!-- Admin Dashboard button -->
-                    <a class="btn btn-warning btn-block" th:href="@{/admin}">Admin Dashboard</a>
+                    <a class="btn btn-warning btn-block" th:href="@{/admin/dashboard}">Admin Dashboard</a>
                 </div>
             </div>
         </div>

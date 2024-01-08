@@ -18,7 +18,7 @@
     <a class="navbar-brand" th:href="@{/}">Expense Manager</a>
 
 </nav>
-<div class="container mt-5">
+<div class="container mt-5" style="margin-top: 70px;">
     <h2>Update Expense</h2>
     <form th:action="@{/expense/update}" method="post" th:object="${expense}">
         <input type="hidden" th:field="*{id}">

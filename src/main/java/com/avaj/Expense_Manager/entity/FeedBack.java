@@ -1,24 +1,21 @@
 package com.avaj.Expense_Manager.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="role")
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class Role {
+@NoArgsConstructor
+@Table(name= "feedback")
+public class FeedBack {
     @Id
-    @Column(name="id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="id")
     private Long id;
 
-    @Column(name="role")
-    private String role;
+    @Column(name="feed_back")
+    String feedBack;
 }
