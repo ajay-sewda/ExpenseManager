@@ -5,6 +5,7 @@ import com.avaj.Expense_Manager.repository.RoleRepository;
 import com.avaj.Expense_Manager.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -138,11 +139,18 @@ public class UserServiceImpl implements UserService{
        user.setEnabled(false);
        userRepository.save(user);
     }
+    @Override
+    public void enableUser(String username) {
+        User user = userRepository.findByUserName(username);
+        user.setEnabled(true);
+        userRepository.save(user);
+    }
 
     @Override
     @Transactional
     public void deleteUser(String username) {
         User user = userRepository.findByUserName(username);
+        user.getRoles().clear();
         userRepository.deleteById(user.getId());
     }
 
@@ -153,7 +161,9 @@ public class UserServiceImpl implements UserService{
         if (user == null) {
             throw new UsernameNotFoundException("Invalid username or password.");
         }
-
+        if (!user.isEnabled()) {
+            throw new DisabledException("User is disabled");
+        }
         Collection<SimpleGrantedAuthority> authorities = mapRolesToAuthorities(user.getRoles());
 
         return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(),

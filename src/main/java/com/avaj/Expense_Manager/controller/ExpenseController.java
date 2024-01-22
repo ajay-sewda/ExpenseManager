@@ -23,12 +23,11 @@ public class ExpenseController {
 
     private ExpenseService expenseService;
     private GroupService groupService;
-    private FinalSplitService finalSplitService;
+
     @Autowired
-    public ExpenseController(ExpenseService expenseService, GroupService groupService, FinalSplitService finalSplitService) {
+    public ExpenseController(ExpenseService expenseService, GroupService groupService) {
         this.expenseService = expenseService;
         this.groupService = groupService;
-        this.finalSplitService = finalSplitService;
     }
 
     @GetMapping("/create")
@@ -45,7 +44,6 @@ public class ExpenseController {
     @PostMapping("/process")
     public String addExpense(@ModelAttribute("expense") Expense expense) {
         expenseService.createExpense(expense);
-        finalSplitService.updateFinalSplit(expense.getExpGrp().getId());
         return "redirect:/group/details?groupId=" + expense.getExpGrp().getId();
     }
 
@@ -67,7 +65,6 @@ public class ExpenseController {
     @PostMapping("/update")
     public String updateExpense(@Valid @ModelAttribute("expense") Expense expense) {
         expenseService.updateExpense(expense);
-        finalSplitService.updateFinalSplit(expense.getExpGrp().getId());
         return "redirect:/group/details?groupId=" + expense.getExpGrp().getId();
     }
 
@@ -75,7 +72,12 @@ public class ExpenseController {
     public String deleteExpense(@RequestParam("expenseId") long expenseId) {
         Long id=expenseService.getExpenseById(expenseId).getExpGrp().getId();
         expenseService.deleteExpenseById(expenseId);
-        finalSplitService.updateFinalSplit(id);
+        return "redirect:/group/details?groupId=" + id;
+    }
+    @GetMapping("/deleteSettleUp")
+    public String deleteSettleUpTrans(@RequestParam("expenseId") long expenseId) {
+        Long id=expenseService.getExpenseById(expenseId).getExpGrp().getId();
+        expenseService.deleteSettleUpTransaction(expenseId);
         return "redirect:/group/details?groupId=" + id;
     }
 }

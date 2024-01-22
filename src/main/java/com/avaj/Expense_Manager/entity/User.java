@@ -14,6 +14,7 @@ import java.util.List;
 
 @Entity
 @Data
+@ToString(exclude = {"roles", "userGroups","expenses"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="user")
@@ -27,7 +28,7 @@ public class User {
     @Column(name = "username", unique = true)
     @NotNull(message = "is required")
     @Size(min = 1, message = "is required")
-    @Pattern(regexp="^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
+    @Pattern(regexp="^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$",message = "Please enter valid email")
     private String userName;
 
     @Column(name = "password")
@@ -50,7 +51,7 @@ public class User {
     private String resetToken;
 
     @JsonIgnore
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))

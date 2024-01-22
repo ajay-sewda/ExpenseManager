@@ -18,7 +18,7 @@
     <a class="navbar-brand" th:href="@{/}">Expense Manager</a>
 
 </nav>
-<div class="container mt-5" style="margin-top: 70px;">
+<div class="container mt-5" style="padding-top: 70px;">
     <h2>Update Expense</h2>
     <form th:action="@{/expense/update}" method="post" th:object="${expense}">
         <input type="hidden" th:field="*{id}">
@@ -38,7 +38,7 @@
         <div class="form-group">
             <label for="paidBy">Paid By:</label>
             <select class="form-control" id="paidBy" th:field="*{expPaidBy}">
-                <option th:each="user : ${groupUsers}" th:value="${user.id}" th:text="${user.userName}"></option>
+                <option th:each="user : ${groupUsers}" th:value="${user.id}" th:text="${user.firstName}"></option>
             </select>
         </div>
         <div class="form-group">
@@ -46,7 +46,7 @@
             <div class="form-check">
                 <div th:each="user : ${groupUsers}">
                     <input type="checkbox" class="form-check-input" th:id="${'userCheckbox_' + user.id}" th:name="usrSplitBtw" th:value="${user.id}" th:checked="${#lists.contains(expense.usrSplitBtw, user)}">
-                    <label class="form-check-label" th:for="${'userCheckbox_' + user.id}" th:text="${user.userName}"></label>
+                    <label class="form-check-label" th:for="${'userCheckbox_' + user.id}" th:text="${user.firstName}"></label>
                 </div>
             </div>
         </div>

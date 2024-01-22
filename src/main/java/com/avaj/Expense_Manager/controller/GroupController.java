@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -53,16 +55,34 @@ public class GroupController {
 
     // Show group details
     @GetMapping("/details")
-    public String groupDetails(@RequestParam("groupId") Long theId,Model theModel) {
+    public String groupDetails(@RequestParam("groupId") Long theId,Model theModel,Principal principal) {
         Group group = groupService.getGroupById(theId);
+        finalSplitService.updateFinalSplit(theId);
         List<FinalSplit> finalSplits = finalSplitService.getFinalSplit(theId);
+        Boolean settledUp = true;
+        User user = userService.getUserByUserName(principal.getName());
+        for(FinalSplit temp:finalSplits){
+            if(temp.getFinalAmt()==0){
+                finalSplitService.deleteFinalSplit(temp.getId());
+                finalSplits.remove(temp);
+                continue;
+            }
+            if(user.getId()== temp.getFinalPayBy() || user.getId()== temp.getFinalPayTo()){
+                settledUp=false;
+            }
+        }
+        // Sorting expenses based on date and ID in descending order (newest first)
+        List<Expense> expenses = new ArrayList<>(group.getExpenses());
+        Collections.sort(expenses, Comparator
+                .comparing(Expense::getDate, Comparator.reverseOrder())
+                .thenComparing(Expense::getId, Comparator.reverseOrder()));
+        group.setExpenses(expenses);
         // Add group, users, expenses to the model
+        theModel.addAttribute("settledUp",settledUp);
         theModel.addAttribute("finalSplit",finalSplits);
         theModel.addAttribute("group", group);
         return "old/groupDetails"; // Thymeleaf template name for group details
     }
-
-
 
 //     Update group details
 @GetMapping("/update")
@@ -89,47 +109,18 @@ public String updateGroup(@Valid @ModelAttribute("group") Group group) {
         return "redirect:/";
     }
 
-//    balances
-    @GetMapping("/balances")
-    public String showBalances(@RequestParam("groupId") Long groupId, Model theModel,Principal principal){
-        User user = userService.getUserByUserName(principal.getName());
-        List<FinalSplit> finalSplits =finalSplitService.getFinalSplit(groupId);
-        theModel.addAttribute("finalSplits",finalSplits);
+    @GetMapping("/addMember")
+    public String addMember(@RequestParam("groupId") Long groupId, Model theModel){
         Group group = groupService.getGroupById(groupId);
-        theModel.addAttribute("group", group);
-        theModel.addAttribute("userId",user.getId());
-        return "balances";
+        List<User> users = userService.getAllUsers();
+        theModel.addAttribute("group",group);
+        theModel.addAttribute("allUsers",users);
+        return "old/addMember";
     }
-    @GetMapping("/settleUp")
-    public String showSettleUpPage(@RequestParam("groupId") Long groupId, Model theModel, Principal principal){
-        User user = userService.getUserByUserName(principal.getName());
-        List<FinalSplit> finalSplits = new ArrayList<>();
-        for(FinalSplit tempFinalSplit:finalSplitService.getFinalSplit(groupId)){
-            if(user.getId()==tempFinalSplit.getFinalPayTo() || user.getId()==tempFinalSplit.getFinalPayBy()){
-                finalSplits.add(tempFinalSplit);
-            }
-        }
-        Group group = groupService.getGroupById(groupId);
-        theModel.addAttribute("finalSplits",finalSplits);
-        theModel.addAttribute("group", group);
-        theModel.addAttribute("userId",user.getId());
-        return "settleUp";
+    @PostMapping("/addMember")
+    public String processAddMember(@RequestParam("groupId") Long groupId,@ModelAttribute("group") Group group){
+        groupService.addUser(groupId,group.getGroupUsers());
+        return "redirect:/group/details?groupId="+groupId;
     }
-    @PostMapping("/settleUp")
-    public String processSettleUp(@RequestParam("finalSplitId") Long finalSplitId,@ModelAttribute("finalSplits") List<FinalSplit> finalSplits){
-        Long groupId = finalSplits.get(0).getFinalSplitGrp().getId();
-        finalSplitService.deleteFinalSplit(finalSplitId);
-        return "redirect:/group/settleUp?groupId=" + groupId;
-    }
-    @PostMapping("/settleUpAll")
-    public String processSettleAll(@ModelAttribute("finalSplits") List<FinalSplit> finalSplits){
-        Long groupId = finalSplits.get(0).getFinalSplitGrp().getId();
-        for(FinalSplit tempFinalSplit: finalSplits){
-            finalSplitService.deleteFinalSplit(tempFinalSplit.getId());
-        }
-        return "redirect:/group/settleUp?groupId=" + groupId;
-    }
-//    @GetMapping("/addMember")
-//    public String
 }
 

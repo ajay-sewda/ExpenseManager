@@ -7,7 +7,9 @@ import java.util.List;
 
 public interface ExpenseService {
     void createExpense(Expense theExpense);
+    void createExpenseForSettleUp(Expense theExpense);
     Expense getExpenseById(Long expenseId);
     void updateExpense(Expense theExpense);
+    void deleteSettleUpTransaction(Long expenseId);
     void deleteExpenseById(Long expenseId);
 }

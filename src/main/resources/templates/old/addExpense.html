@@ -7,6 +7,11 @@
     <title>Add Expense</title>
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 70px;
+        }
+    </style>
 </head>
 
 <body>
@@ -16,40 +21,41 @@
         <img th:src="@{/images/logo.png}" alt="Expense Manager Logo" height="30">
     </a>
     <a class="navbar-brand" th:href="@{/}">Expense Manager</a>
-
 </nav>
-<div class="container mt-5" style="padding-top: 70px;">
+<div class="container mt-4">
     <h2>Add Expense</h2>
     <form action="#" th:action="@{/expense/process}" th:object="${expense}" method="post">
         <div class="form-group">
             <label for="description">Description:</label>
             <input type="text" class="form-control" id="description" th:field="*{expName}" required>
         </div>
-        <div class="form-group">
-            <label for="date">Date:</label>
-            <input type="date" class="form-control" id="date" th:field="*{date}" th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" required>
-        </div>
-        <div class="form-group">
-            <label for="amount">Amount:</label>
-            <input type="number" class="form-control" id="amount" th:field="*{expAmt}" required>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="date">Date:</label>
+                <input type="date" class="form-control" id="date" th:field="*{date}" th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" required>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="amount">Amount:</label>
+                <input type="number" class="form-control" id="amount" th:field="*{expAmt}" required>
+            </div>
         </div>
         <div class="form-group">
             <label for="paidBy">Paid By:</label>
             <select class="form-control" id="paidBy" th:field="*{expPaidBy}">
-                <option th:each="user : ${groupUsers}" th:value="${user.id}" th:text="${user.firstName}"></option>
+                <option th:each="user : ${groupUsers}" th:value="${user.id}" th:text="${user.firstName + ' ' + user.lastName}"></option>
             </select>
         </div>
         <div class="form-group">
-            <label>Split Between</label>
+            <label>Split Between:</label>
             <div class="form-check">
                 <div th:each="user : ${groupUsers}">
                     <input type="checkbox" class="form-check-input" th:id="${'userCheckbox_' + user.id}" th:name="usrSplitBtw" th:value="${user.id}">
-                    <label class="form-check-label" th:for="${'userCheckbox_' + user.id}" th:text="${user.firstName}"></label>
+                    <label class="form-check-label" th:for="${'userCheckbox_' + user.id}" th:text="${user.firstName + ' ' + user.lastName}"></label>
                 </div>
             </div>
         </div>
         <input type="hidden" name="expGrp" th:value="${expense.expGrp.id}">
-        <button type="submit" class="btn btn-primary">Add Expense</button>
+        <button type="submit" class="btn btn-primary mr-2">Add Expense</button>
         <a th:href="@{/group/details(groupId=${expense.expGrp.id})}" class="btn btn-secondary">Back to Group Details</a>
     </form>
 </div>
@@ -57,8 +63,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-
 </body>
 
 </html>

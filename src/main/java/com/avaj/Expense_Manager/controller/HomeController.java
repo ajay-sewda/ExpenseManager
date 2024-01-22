@@ -27,17 +27,16 @@ public class HomeController {
 
                 // Fetch the updated user object from the service
                 User updatedUser = userService.getUserByUserName(username);
+                    // Update the user details in the authentication
+                    theModel.addAttribute("user", updatedUser);
 
-                // Update the user details in the authentication (if needed)
-                theModel.addAttribute("user",updatedUser);
+                    // Redirect to the home page
+                    return "home";
 
-                // Redirect to the home page
-                return "home";
             } else {
                 // Handle the case when there is no valid authentication
                 return "redirect:/showMyLoginPage";
             }
-
         }
 
         // add a request mapping for /leaders

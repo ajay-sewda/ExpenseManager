@@ -32,6 +32,19 @@ public class ExpenseServiceImpl implements ExpenseService{
         expense.setDate(theExpense.getDate());
         expenseRepository.save(expense);
     }
+
+    @Override
+    public void createExpenseForSettleUp(Expense theExpense) {
+        Expense expense = new Expense();
+        expense.setExpName(theExpense.getExpName());
+        expense.setExpAmt(theExpense.getExpAmt());
+        expense.setUsrSplitBtw(theExpense.getUsrSplitBtw());
+        expense.setExpPaidBy(theExpense.getExpPaidBy());
+        expense.setExpGrp(theExpense.getExpGrp());
+        expense.setDate(theExpense.getDate());
+        expenseRepository.save(expense);
+    }
+
     @Override
     public Expense getExpenseById(Long expenseId) {
         return expenseRepository.findById(expenseId).get();
@@ -49,6 +62,13 @@ public class ExpenseServiceImpl implements ExpenseService{
         tempExpense.setDate(theExpense.getDate());
         tempExpense.setExpGrp(theExpense.getExpGrp());
         expenseRepository.save(tempExpense);
+    }
+    @Override
+    @Transactional
+    public void deleteSettleUpTransaction(Long expenseId) {
+        Expense expense = expenseRepository.findById(expenseId).get();
+
+        expenseRepository.deleteById(expenseId);
     }
 
     @Override

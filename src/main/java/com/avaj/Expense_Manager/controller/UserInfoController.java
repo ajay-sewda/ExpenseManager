@@ -42,7 +42,7 @@ public class UserInfoController {
     @PostMapping("/processUpdateDetails")
     public String processUpdateDetails(@ModelAttribute("webUser") User updatedUser){
         userService.updateUserDetails(updatedUser);
-        return "redirect:/edit";
+        return "redirect:/profile/edit";
     }
     @GetMapping("/disable")
     public String disableProfile(Principal principal){

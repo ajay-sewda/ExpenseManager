@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -13,47 +13,62 @@
         <img th:src="@{/images/logo.png}" alt="Expense Manager Logo" height="30">
     </a>
     <a class="navbar-brand" th:href="@{/}">Expense Manager</a>
-
 </nav>
 
-<div class="container mt-4" style="padding-top: 70px;">
-    <h1>Welcome to Admin Dashboard</h1>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Welcome to Admin Dashboard</h1>
 
-    <!-- Display Total Number of Users -->
+    <!-- Calculate role-based user counts -->
     <div class="row">
-        <div class="col-md-4">
-            <div class="card text-white bg-primary mb-3">
-                <div class="card-header">Total Users</div>
+        <div class="col-md-3 mb-3">
+            <div class="card text-white bg-info">
+                <div class="card-header">Admins</div>
                 <div class="card-body">
-                    <h5 class="card-title" th:text="${#lists.size(users)}"></h5>
-                    <!-- Add more user-related statistics if needed -->
+                    <h5 class="card-title">
+                        <span th:text="${users.?[roles.![role].contains('ROLE_ADMIN')].size()}"></span>
+                    </h5>
                 </div>
             </div>
         </div>
-        <!-- Add more statistics or features here -->
-    </div>
-
-    <!-- Display Total Number of Feedbacks -->
-    <div class="row mt-4">
-        <div class="col-md-4">
-            <div class="card text-white bg-success mb-3">
-                <div class="card-header">Total Feedbacks</div>
+        <div class="col-md-3 mb-3">
+            <div class="card text-white bg-warning">
+                <div class="card-header">Developers</div>
                 <div class="card-body">
-                    <h5 class="card-title" th:text="${#lists.size(feedBacks)}"></h5>
-                    <!-- Add more feedback-related statistics if needed -->
+                    <h5 class="card-title">
+                        <span th:text="${users.?[roles.![role].contains('ROLE_DEVELOPER')].size() - users.?[roles.![role].contains('ROLE_ADMIN')].size()}"></span>
+                    </h5>
                 </div>
             </div>
         </div>
-        <!-- Add more statistics or features here -->
+        <div class="col-md-3 mb-3">
+            <div class="card text-white bg-secondary">
+                <div class="card-header">Users</div>
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <span th:text="${users.size() - users.?[roles.![role].contains('ROLE_DEVELOPER')].size()}"></span>
+                    </h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card text-white bg-secondary">
+                <div class="card-header">Total</div>
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <span th:text="${#lists.size(users)}"></span>
+                    </h5>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Buttons to Get User List and Feedback List -->
     <div class="row mt-4">
         <div class="col-md-6">
-            <a href="#userList" class="btn btn-primary">View User List</a>
+            <a href="#userList" class="btn btn-primary btn-block">View User List</a>
         </div>
         <div class="col-md-6">
-            <a href="#feedbacks" class="btn btn-primary">View Feedbacks</a>
+            <a href="#feedbacks" class="btn btn-primary btn-block">View Feedbacks</a>
         </div>
     </div>
 
@@ -72,23 +87,23 @@
             </thead>
             <tbody>
             <tr th:each="tempUser: ${users}">
-                <td th:text="${tempUser.firstName}"/>
-                <td th:text="${tempUser.lastName}"/>
-                <td th:text="${tempUser.userName}"/>
+                <td th:text="${tempUser.firstName}"></td>
+                <td th:text="${tempUser.lastName}"></td>
+                <td th:text="${tempUser.userName}"></td>
                 <td>
+                    <ul>
                     <span th:each="tempRole: ${tempUser.roles}">
-                    <span th:if="${tempRole.role==ROLE_ADMIN}">Admin</span>
-                    <span th:if="${tempRole.role==ROLE_DEVELOPER}">Developer</span>
-                    <span th:if="${tempRole.role==ROLE_USER}">User</span>
+                        <li th:if="${tempRole.role == 'ROLE_ADMIN'}">Admin</li>
+                        <li th:if="${tempRole.role == 'ROLE_DEVELOPER'}">Developer</li>
+                        <li th:if="${tempRole.role == 'ROLE_USER'}">User</li>
                     </span>
-                <td/>
+                    </ul>
+                </td>
                 <td>
-                    <a th:href="@{/admin/updateRole(userId=${tempUser.id})}"
-                       class="btn btn-info btn-sm">Update Role</a>
-                    <a th:href="@{/admin/delete(userId=${tempUser.id})}"
-                       class="btn btn-danger btn-sm"
-                       onclick="if(!(confirm('Are You Sure, You want to disable this User?'))) return false">
-                        Disable</a>
+                    <a th:href="@{/admin/updateRole(userId=${tempUser.id})}" class="btn btn-info btn-sm">Update Role</a>
+                    <a th:if="${tempUser.enabled==true}" th:href="@{/admin/disable(userId=${tempUser.id})}" class="btn btn-danger btn-sm" onclick="if(!(confirm('Are You Sure, You want to disable this User?'))) return false">Disable</a>
+                    <a th:if="${tempUser.enabled==false}" th:href="@{/admin/enable(userId=${tempUser.id})}" class="btn btn-success btn-sm">Enable</a>
+
                 </td>
             </tr>
             </tbody>

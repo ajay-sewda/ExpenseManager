@@ -22,6 +22,7 @@ public interface UserService extends UserDetailsService {
     void updateRole(User user, Role role);
     void updateUserCredentials(User theUser);
     void disableUser(String username);
+    void enableUser(String username);
     void deleteUser(String username);
 //    Password reset methods
     String generateResetToken();

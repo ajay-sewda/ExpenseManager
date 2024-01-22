@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Create Group</title>
+    <title>Update Group</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
@@ -15,10 +15,10 @@
 
 </nav>
 
-<div class="container-fluid d-flex justify-content-center align-items-center vh-100" style="margin-top: 70px;">
+<div class="container-fluid d-flex justify-content-center align-items-center vh-100" style="padding-top: 70px;">
     <div class="col-lg-6">
         <div class="card p-4">
-            <h2 class="text-primary mb-4">Create Group</h2>
+            <h2 class="text-primary mb-4">Update Group</h2>
 
             <form th:action="@{/group/processUpdate}" method="POST" th:object="${group}">
                 <input type="hidden" th:field="*{id}">

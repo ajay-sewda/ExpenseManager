@@ -19,13 +19,13 @@ public class SecurityConfig {
     }
 
     //authenticationProvider bean definition
-    @Bean
-    public DaoAuthenticationProvider authenticationProvider(UserService userService) {
-        DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
-        auth.setUserDetailsService(userService); //set the custom user details service
-        auth.setPasswordEncoder(passwordEncoder()); //set the password encoder - bcrypt
-        return auth;
-    }
+//    @Bean
+//    public DaoAuthenticationProvider authenticationProvider(UserService userService) {
+//        DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
+//        auth.setUserDetailsService(userService); //set the custom user details service
+//        auth.setPasswordEncoder(passwordEncoder()); //set the password encoder - bcrypt
+//        return auth;
+//    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationSuccessHandler customAuthenticationSuccessHandler) throws Exception {
@@ -37,6 +37,7 @@ public class SecurityConfig {
                                 .requestMatchers("/developer/**").hasRole("DEVELOPER")
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/register/**").permitAll()
+                                .requestMatchers("/images/**").permitAll()
                                 .requestMatchers("/forgotPassword/**").permitAll()
                                 .requestMatchers("/passwordResetSuccess").permitAll()
                                 .requestMatchers("/invalidToken").permitAll()

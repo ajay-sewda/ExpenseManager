@@ -11,21 +11,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class FinalSplitServiceImpl implements FinalSplitService {
 
     private GroupService groupService;
+    ExpenseService expenseService;
+    UserService userService;
     private FinalSplitRepository finalSplitRepository;
 
     @Autowired
-    public FinalSplitServiceImpl(GroupService groupService, FinalSplitRepository finalSplitRepository) {
+    public FinalSplitServiceImpl(GroupService groupService, FinalSplitRepository finalSplitRepository,ExpenseService expenseService,UserService userService) {
         this.groupService = groupService;
         this.finalSplitRepository = finalSplitRepository;
+        this.expenseService = expenseService;
+        this.userService = userService;
+    }
+
+    @Override
+    public FinalSplit getFinalSplitById(Long finalSplitId) {
+        return finalSplitRepository.findById(finalSplitId).get();
     }
 
     @Override
@@ -40,6 +46,31 @@ public class FinalSplitServiceImpl implements FinalSplitService {
         Group group = groupService.getGroupById(groupId);
         finalSplitRepository.deleteAllByFinalSplitGrp(group);
         createFinalSplits(groupId);
+    }
+
+    @Override
+    public void settleUp(FinalSplit tempFinalSplit, User user,Long groupId) {
+        if(user.getId()==tempFinalSplit.getFinalPayBy()){
+            Expense theExpense = new Expense();
+            theExpense.setExpAmt(tempFinalSplit.getFinalAmt());
+            theExpense.setDate(new Date());
+            theExpense.setExpGrp(groupService.getGroupById(groupId));
+            theExpense.setUsrSplitBtw(Collections.singletonList(userService.getUserById(tempFinalSplit.getFinalPayBy())));
+            theExpense.setExpPaidBy(tempFinalSplit.getFinalPayTo());
+            theExpense.setExpName("Settle Up Transaction:- "+userService.getUserById(tempFinalSplit.getFinalPayTo()).getFirstName()+" settled up with "+user.getFirstName());
+            expenseService.createExpenseForSettleUp(theExpense);
+        }
+        else if(user.getId()==tempFinalSplit.getFinalPayTo()){
+            Expense theExpense = new Expense();
+            theExpense.setExpAmt(tempFinalSplit.getFinalAmt());
+            theExpense.setDate(new Date());
+            theExpense.setExpGrp(groupService.getGroupById(groupId));
+            theExpense.setUsrSplitBtw(Collections.singletonList(userService.getUserById(tempFinalSplit.getFinalPayBy())));
+            theExpense.setExpPaidBy(user.getId());
+            theExpense.setExpName("Settle Up Transaction:- "+user.getFirstName()+" settled up with "+userService.getUserById(tempFinalSplit.getFinalPayBy()).getFirstName());
+            expenseService.createExpenseForSettleUp(theExpense);
+        }
+        updateFinalSplit(groupId);
     }
 
     @Override

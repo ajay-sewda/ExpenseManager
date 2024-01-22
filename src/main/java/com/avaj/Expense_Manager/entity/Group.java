@@ -13,6 +13,7 @@ import java.util.List;
 
 @Entity
 @Data
+@ToString(exclude = {"finalSplits", "expenses","groupUsers"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="`group`")
@@ -35,7 +36,7 @@ public class Group {
     private Float totalExpense=0F;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "finalSplitGrp")
+    @OneToMany(mappedBy = "finalSplitGrp",cascade = CascadeType.ALL)
     private List<FinalSplit> finalSplits;
 
     @JsonIgnore

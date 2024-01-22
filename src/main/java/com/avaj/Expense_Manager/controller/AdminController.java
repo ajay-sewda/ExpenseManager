@@ -45,8 +45,18 @@ public class AdminController {
         userService.updateRole(user,role);
         return "redirect:/admin/dashboard";
     }
-    @PostMapping("/disable")
+    @GetMapping("/disable")
     public String disable(@RequestParam("userId") Long userId){
         userService.disableUser(userService.getUserById(userId).getUserName());
         return "redirect:/admin/dashboard";    }
+    @GetMapping("/enable")
+    public String enable(@RequestParam("userId") Long userId){
+        userService.enableUser(userService.getUserById(userId).getUserName());
+        return "redirect:/admin/dashboard";
+    }
+    @GetMapping("/deleteFeedback")
+    public String deleteFeedback(@RequestParam("feedBackId") Long feedBackId){
+        feedBackService.delete(feedBackId);
+        return "redirect:/admin/dashboard";
+    }
 }

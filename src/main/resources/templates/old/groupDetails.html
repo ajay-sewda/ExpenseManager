@@ -37,6 +37,11 @@
         <!-- Display final split -->
         <label>Final Split: </label>
         <ul>
+            <span th:if="${finalSplit.size()==0}" style="color:green;">
+                You are All settled up!
+            </span>
+            <span th:unless="${finalSplit.size()==0}">
+                <span th:if="${settledUp}==true" style="color:green;">You are settled up but some members have expenses to settle.</span>
             <p th:each="finalSplit : ${finalSplit}">
                 <span th:each="loggedUser : ${group.groupUsers}"
                       th:if="${loggedUser.userName == #authentication.principal.username
@@ -47,8 +52,8 @@
 
                         <!-- Display the paid to user's first name -->
                         <li th:each="otherUser :${group.groupUsers}" th:if="${otherUser.id == finalSplit.finalPayBy and (loggedUser.id != otherUser.id)}" th:text="'You owe ' + ${otherUser.firstName} + ' ' + ${finalSplit.finalAmt}"></li>
-
                 </span>
+            </span>
             </p>
         </ul>
     </div>
@@ -64,8 +69,8 @@
         <div class="col-md-6">
             <!-- Balances and Settle Up buttons -->
             <div class="text-md-end">
-                <a th:href="@{/group/balances(groupId=${group.id})}" class="btn btn-success btn-sm me-2">Balances</a>
-                <a th:href="@{/group/settleUp(groupId=${group.id})}" class="btn btn-warning btn-sm">Settle Up</a>
+                <a th:href="@{/balances(groupId=${group.id})}" class="btn btn-success btn-sm me-2">Balances</a>
+                <a th:href="@{/settleUp(groupId=${group.id})}" class="btn btn-warning btn-sm">Settle Up</a>
             </div>
         </div>
     </div>
@@ -80,8 +85,17 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="tempExpense: ${group.expenses}">
-            <td th:text="${tempExpense.expName}"/>
+        <tr th:each="tempExpense: ${group.expenses}" >
+            <td>
+            <span th:if="${tempExpense.expName.startsWith('Settle Up Transaction:-')}">
+                <!-- Settle Up transaction description -->
+                <span style="color: orange;" th:text="${tempExpense.expName}"></span>
+            </span>
+                <span th:unless="${tempExpense.expName.startsWith('Settle Up Transaction:-')}">
+                <!-- Regular expense description -->
+                <span th:text="${tempExpense.expName}"></span>
+            </span>
+            </td>
             <td th:text="${tempExpense.expAmt}"/>
             <td>
                 <span th:text="${#dates.format(tempExpense.date, 'dd-MM-yyyy')}"></span>
@@ -92,7 +106,12 @@
                     <span th:each="user : ${group.groupUsers}" th:if="${user.id == tempExpense.expPaidBy}" th:text="${user.firstName}"></span>
                 </span>
             </td>
-            <td>
+            <td th:if="${tempExpense.expName.startsWith('Settle Up Transaction:-')}">
+                <a th:href="@{/expense/update(expenseId=${tempExpense.id})}" class="btn btn-info btn-sm">Update</a>
+                <a th:href="@{/expense/deleteSettleUp(expenseId=${tempExpense.id})}" class="btn btn-danger btn-sm"
+                   onclick="if(!(confirm('Are You Sure, You want to delete this Expense?'))) return false">Delete</a>
+            </td>
+            <td th:unless="${tempExpense.expName.startsWith('Settle Up Transaction:-')}">
                 <a th:href="@{/expense/update(expenseId=${tempExpense.id})}" class="btn btn-info btn-sm">Update</a>
                 <a th:href="@{/expense/delete(expenseId=${tempExpense.id})}" class="btn btn-danger btn-sm"
                    onclick="if(!(confirm('Are You Sure, You want to delete this Expense?'))) return false">Delete</a>

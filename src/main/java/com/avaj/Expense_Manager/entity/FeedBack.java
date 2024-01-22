@@ -18,4 +18,7 @@ public class FeedBack {
 
     @Column(name="feed_back")
     String feedBack;
+
+    @Column(name="type")
+    String type;
 }

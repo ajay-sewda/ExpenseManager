@@ -8,4 +8,5 @@ import java.util.List;
 public interface FeedBackService{
     List<FeedBack>  getFeedBack();
     void save(FeedBack feedBack);
+    void delete(Long feedBackId);
 }

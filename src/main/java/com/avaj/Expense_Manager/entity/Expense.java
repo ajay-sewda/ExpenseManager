@@ -13,6 +13,7 @@ import java.util.List;
 
 @Entity
 @Data
+@ToString(exclude = {"usrSplitBtw", "expGrp"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="expense")
@@ -47,53 +48,3 @@ public class Expense {
     @JoinColumn(name = "group_id")
     private Group expGrp;
 }
-
-
-/*
-<div>
-    <!-- Display final split -->
-    <label>Final Split: </label>
-    <ul>
-        <li th:each="split : ${finalSplit}">
-            <span th:with="loggedUser=${group.groupUsers.?[userName == #authentication.principal.username][0]}">
-                <span th:with="otherUser=${group.groupUsers.?[id == __${split.finalPayTo}__][0]}">
-                    <span th:if="${split.finalPayBy == loggedUser.id}">
-                        <!-- Display the message when the logged-in user paid -->
-                        <span th:text="${otherUser.firstName} + ' owes you ' + ${split.finalAmt}"></span>
-                    </span>
-                    <span th:if="${split.finalPayTo == loggedUser.id}">
-                        <!-- Display the message when the logged-in user is owed -->
-                        <span th:text="'You owe ' + ${otherUser.firstName} + ' ' + ${split.finalAmt}"></span>
-                    </span>
-                </span>
-            </span>
-        </li>
-    </ul>
-</div>
-
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

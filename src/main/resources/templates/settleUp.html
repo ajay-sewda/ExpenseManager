@@ -33,21 +33,21 @@
                     <span th:each="otherUser :${group.groupUsers}" th:if="${otherUser.id == finalSplit.finalPayTo and (userId != otherUser.id)}">
                             <span th:text="${otherUser.firstName} + ' owes you ' + ${finalSplit.finalAmt}"></span>
                         <!-- Button to settle individual final split -->
-                            <a th:href="@{/group/settleUp(finalSplitId=${finalSplit.id})}" class="btn btn-primary ms-2">Settle</a>
+                            <a th:href="@{/settleUpProcess(finalSplitId=${finalSplit.id})}" class="btn btn-primary ms-2">Settle</a>
                         </span>
 
                     <!-- Display the paid to user's first name -->
                     <span th:each="otherUser :${group.groupUsers}" th:if="${otherUser.id == finalSplit.finalPayBy and (userId != otherUser.id)}">
                             <span th:text="'You owe ' + ${otherUser.firstName} + ' ' + ${finalSplit.finalAmt}"></span>
                         <!-- Button to settle individual final split -->
-                            <a th:href="@{/group/settleUp(finalSplitId=${finalSplit.id})}" class="btn btn-primary ms-2">Settle</a>
+                            <a th:href="@{/settleUpProcess(finalSplitId=${finalSplit.id})}" class="btn btn-primary ms-2">Settle</a>
                         </span>
                 </li>
             </ul>
         </div>
         <!-- Button to settle up all final splits -->
         <div class="text-center mt-4">
-            <a th:href="@{/group/settleUpAll}" class="btn btn-success">Settle Up All</a>
+            <a th:href="@{/settleUpAll(groupId=${finalSplits[0].finalSplitGrp.id})}" class="btn btn-success">Settle Up All</a>
         </div>
         <!-- Add a back button -->
         <a th:href="@{/group/details(groupId=${finalSplits[0].finalSplitGrp.id})}" class="btn btn-outline-primary mt-4 d-block">Back</a>

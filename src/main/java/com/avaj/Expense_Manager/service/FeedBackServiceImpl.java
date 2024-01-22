@@ -23,6 +23,11 @@ public class FeedBackServiceImpl implements FeedBackService{
     public void save(FeedBack feedBack) {
         FeedBack feedBack1 = new FeedBack();
         feedBack1.setFeedBack(feedBack.getFeedBack());
+        feedBack1.setType(feedBack.getType());
         feedBackRepository.save(feedBack1);
+    }
+    @Override
+    public void delete(Long feedBackId){
+        feedBackRepository.deleteById(feedBackId);
     }
 }

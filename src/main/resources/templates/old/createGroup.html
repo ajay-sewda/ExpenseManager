@@ -15,7 +15,7 @@
 
 </nav>
 
-<div class="container-fluid d-flex justify-content-center align-items-center vh-100" style="margin-top: 70px;">
+<div class="container-fluid d-flex justify-content-center align-items-center vh-100" style="padding-top: 70px;">
     <div class="col-lg-6">
         <div class="card p-4">
             <h2 class="text-primary mb-4">Create Group</h2>
@@ -57,7 +57,7 @@
                 <div class="form-group">
                     <label for="groupUsers">Group Members</label>
                     <select id="groupUsers" class="custom-select" th:field="*{groupUsers}" multiple required>
-                        <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.firstName}"></option>
+                        <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.firstName + ' ' + user.lastName}"></option>
                     </select>
                 </div>
 
