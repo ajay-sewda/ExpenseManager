@@ -39,6 +39,7 @@ public class SecurityConfig {
                                 .requestMatchers("/register/**").permitAll()
                                 .requestMatchers("/images/**").permitAll()
                                 .requestMatchers("/forgotPassword/**").permitAll()
+                                .requestMatchers("/resetPassword").permitAll()
                                 .requestMatchers("/passwordResetSuccess").permitAll()
                                 .requestMatchers("/invalidToken").permitAll()
                                 .anyRequest().authenticated()

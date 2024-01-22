@@ -52,7 +52,10 @@ public class PasswordResetController {
     public String showResetPasswordForm(@RequestParam("token") String token, Model model) {
         // Validate token, show reset password form
         if (userService.isValidPasswordResetToken(token)) {
+            PasswordForm passwordForm = new PasswordForm();
+            passwordForm.setOldPassword("Random");
             model.addAttribute("token", token);
+            model.addAttribute("passwordForm",passwordForm);
             return "resetPassword"; // Thymeleaf template for reset password form
         } else {
             return "redirect:/invalidToken"; // Handle invalid/expired token scenario
@@ -64,11 +67,20 @@ public class PasswordResetController {
     }
 
     @PostMapping("/resetPassword")
-    public String processResetPassword(@RequestParam("token") String token, @RequestParam("password") String password) {
+    public String processResetPassword(@ModelAttribute("passwordForm")@Valid PasswordForm passwordForm, BindingResult bindingResult, @RequestParam("token") String token, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "resetPassword"; // Return form if there are validation errors
+        }
         // Reset password if token is valid
         if (userService.isValidPasswordResetToken(token)) {
-            userService.resetUserPassword(token, password);
-            return "redirect:/showMyLoginPage"; // Redirect to login page or success page
+            if (!passwordForm.getNewPassword().equals(passwordForm.getConfirmPassword())) {
+                bindingResult.reject("error.resetError", "Passwords do not match");
+                return "resetPassword";
+            }
+            else{
+                userService.resetUserPassword(token, passwordForm.getNewPassword());
+                return "resetDone"; // Success page
+            }
         } else {
             return "redirect:/invalidToken"; // Handle invalid/expired token scenario
         }

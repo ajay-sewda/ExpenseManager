@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Developer Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-md bg-dark navbar-dark fixed-top">
+    <!-- Logo -->
+    <a class="navbar-brand" th:href="@{/}">
+        <img th:src="@{/images/logo.png}" alt="Expense Manager Logo" height="30">
+    </a>
+    <a class="navbar-brand" th:href="@{/}">Expense Manager</a>
+</nav>
+
+<div class="container mt-5" style="padding-top:70px;">
+    <h1 class="text-center mb-4">Welcome to Developer Dashboard</h1>
+</div>
+<div style="text-align:center;">
+    <a th:href="@{/}">Back to Home Page</a>
+</div>
+
+
+</body>
+</html>

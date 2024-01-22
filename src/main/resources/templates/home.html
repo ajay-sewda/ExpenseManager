@@ -106,8 +106,16 @@
                     <span th:text="${tempGroup.groupName}" />
                 </a>
             </td>
-            <td th:text="${tempGroup.groupType}" />
-            <td th:text="${tempGroup.totalExpense}" />
+            <td>
+                <a th:href="@{/group/details(groupId=${tempGroup.id})}" class="text-link" >
+                    <span th:text="${tempGroup.groupType}" />
+                </a>
+            </td>
+            <td>
+                <a th:href="@{/group/details(groupId=${tempGroup.id})}" class="text-link" >
+                    <span th:text="${tempGroup.totalExpense}" />
+                </a>
+            </td>
             <td>
                 <a th:href="@{/group/update(groupId=${tempGroup.id})}" class="btn btn-info btn-sm">Update</a>
                 <a th:href="@{/group/delete(groupId=${tempGroup.id})}" class="btn btn-danger btn-sm" onclick="if(!(confirm('Are You Sure, You want to delete this Group?'))) return false">Delete</a>
@@ -124,7 +132,7 @@
             <div class="row">
                 <div class="col-6 mb-2" sec:authorize="hasRole('DEVELOPER')">
                     <!-- Developer Dashboard button -->
-                    <a class="btn btn-primary btn-block" th:href="@{/developers/devboard}">Developer Dashboard</a>
+                    <a class="btn btn-primary btn-block" th:href="@{/developer/devboard}">Developer Dashboard</a>
                 </div>
                 <div class="col-6 mb-2" sec:authorize="hasRole('ADMIN')">
                     <!-- Admin Dashboard button -->
