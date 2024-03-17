@@ -58,7 +58,7 @@ public class FinalSplitServiceImpl implements FinalSplitService {
             theExpense.setUsrSplitBtw(Collections.singletonList(userService.getUserById(tempFinalSplit.getFinalPayBy())));
             theExpense.setExpPaidBy(tempFinalSplit.getFinalPayTo());
             theExpense.setExpName("Settle Up Transaction:- "+userService.getUserById(tempFinalSplit.getFinalPayTo()).getFirstName()+" settled up with "+user.getFirstName());
-            expenseService.createExpenseForSettleUp(theExpense);
+            expenseService.createExpense(theExpense);
         }
         else if(user.getId()==tempFinalSplit.getFinalPayTo()){
             Expense theExpense = new Expense();
@@ -68,7 +68,7 @@ public class FinalSplitServiceImpl implements FinalSplitService {
             theExpense.setUsrSplitBtw(Collections.singletonList(userService.getUserById(tempFinalSplit.getFinalPayBy())));
             theExpense.setExpPaidBy(user.getId());
             theExpense.setExpName("Settle Up Transaction:- "+user.getFirstName()+" settled up with "+userService.getUserById(tempFinalSplit.getFinalPayBy()).getFirstName());
-            expenseService.createExpenseForSettleUp(theExpense);
+            expenseService.createExpense(theExpense);
         }
         updateFinalSplit(groupId);
     }

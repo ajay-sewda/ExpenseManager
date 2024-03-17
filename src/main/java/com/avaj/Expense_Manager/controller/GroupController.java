@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/group")
@@ -41,7 +42,11 @@ public class GroupController {
     // Show group creation form
     @GetMapping("/create")
     public String showGroupCreationForm(Model model) {
-        List<User> users = userService.getAllUsers();
+        List<User> users = userService.getAllUsers().stream()
+                .filter(user -> user.getRoles().stream()
+                        .noneMatch(role -> role.getRole().equals("ROLE_ADMIN") || role.getRole().equals("ROLE_DEVELOPER")))
+                .collect(Collectors.toList());
+
         model.addAttribute("users", users);
         model.addAttribute("group", new Group());
         return "old/createGroup"; // Thymeleaf template name for group creation form
@@ -105,7 +110,14 @@ public String updateGroup(@Valid @ModelAttribute("group") Group group) {
     // Delete a group
     @GetMapping("/delete")
     public String deleteGroup(@RequestParam("groupId") Long groupId) {
-        groupService.deleteGroup(groupId);
+        List<FinalSplit> finalSplits = groupService.getGroupById(groupId).getFinalSplits();
+        // Check if all amounts in finalSplits are zero
+        boolean allAmountsZero = finalSplits.stream().allMatch(finalSplit -> finalSplit.getFinalAmt() == 0);
+
+        if(allAmountsZero){
+            groupService.deleteGroup(groupId);
+            return "redirect:/";
+        }
         return "redirect:/";
     }
 

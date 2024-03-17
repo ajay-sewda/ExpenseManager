@@ -13,7 +13,7 @@ import java.util.List;
 
 @Entity
 @Data
-@ToString(exclude = {"finalSplits", "expenses","groupUsers"})
+@ToString(exclude = {"finalSplits","expenses","groupUsers"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="`group`")

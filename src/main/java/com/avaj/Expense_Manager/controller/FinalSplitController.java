@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class FinalSplitController {
@@ -42,10 +43,11 @@ public class FinalSplitController {
     }
     @GetMapping("/settleUp")
     public String showSettleUpPage(@RequestParam("groupId") Long groupId, Model theModel, Principal principal){
+        finalSplitService.updateFinalSplit(groupId);
         User user = userService.getUserByUserName(principal.getName());
         List<FinalSplit> finalSplits = new ArrayList<>();
         for(FinalSplit tempFinalSplit:finalSplitService.getFinalSplit(groupId)){
-            if(tempFinalSplit.getFinalAmt()!=0 && (user.getId()==tempFinalSplit.getFinalPayTo() || user.getId()==tempFinalSplit.getFinalPayBy())){
+            if(tempFinalSplit.getFinalAmt()!=0F && (user.getId()==tempFinalSplit.getFinalPayTo() || user.getId()==tempFinalSplit.getFinalPayBy())){
                 finalSplits.add(tempFinalSplit);
             }
         }
@@ -65,8 +67,11 @@ public class FinalSplitController {
     @GetMapping("/settleUpAll")
     public String processSettleAll(@RequestParam("groupId") Long groupId, Principal principal){
         User user = userService.getUserByUserName(principal.getName());
-        List<FinalSplit> finalSplits = new ArrayList<>();
-        for(FinalSplit tempFinalSplit:finalSplitService.getFinalSplit(groupId)){
+        List<FinalSplit> finalSplits = finalSplitService.getFinalSplit(groupId)
+                .stream()
+                .filter(finalSplit -> finalSplit.getFinalPayTo() == user.getId() || finalSplit.getFinalPayBy() == user.getId())
+                .toList(); // Collect the filtered results into a list
+        for(FinalSplit tempFinalSplit:finalSplits){
            finalSplitService.settleUp(tempFinalSplit,user,groupId);
         }
         return "redirect:/settleUp?groupId=" + groupId;

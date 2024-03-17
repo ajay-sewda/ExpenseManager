@@ -41,7 +41,7 @@
         <div class="form-group">
             <label for="groupUsers">Add Member/s:</label>
             <select id="groupUsers" class="custom-select" th:field="*{groupUsers}" multiple required>
-                <option th:each="user : ${allUsers}" th:unless="${group.groupUsers.contains(user)}" th:value="${user.id}" th:text="${user.firstName + ' ' + user.lastName}"></option>
+                <option th:each="user : ${allUsers}" th:unless="${group.groupUsers.contains(user)}" th:value="${user.id}" th:text="${user.firstName} + (${user.lastName != null}? ' ' + ${user.lastName} : '')"></option>
             </select>
         </div>
         <button type="submit" class="btn btn-primary">Add Member</button>

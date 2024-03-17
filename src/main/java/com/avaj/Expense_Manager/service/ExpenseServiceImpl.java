@@ -28,19 +28,10 @@ public class ExpenseServiceImpl implements ExpenseService{
         expense.setUsrSplitBtw(theExpense.getUsrSplitBtw());
         expense.setExpPaidBy(theExpense.getExpPaidBy());
         expense.setExpGrp(theExpense.getExpGrp());
-        groupService.updateTotalExpense(expense.getExpGrp(),expense.getExpAmt());
-        expense.setDate(theExpense.getDate());
-        expenseRepository.save(expense);
-    }
-
-    @Override
-    public void createExpenseForSettleUp(Expense theExpense) {
-        Expense expense = new Expense();
-        expense.setExpName(theExpense.getExpName());
-        expense.setExpAmt(theExpense.getExpAmt());
-        expense.setUsrSplitBtw(theExpense.getUsrSplitBtw());
-        expense.setExpPaidBy(theExpense.getExpPaidBy());
-        expense.setExpGrp(theExpense.getExpGrp());
+        if (!theExpense.getExpName().startsWith("Settle Up Transaction")) {
+            // Update total expense of group only if the expense is not for settle up
+            groupService.updateTotalExpense(expense.getExpGrp(), expense.getExpAmt());
+        }
         expense.setDate(theExpense.getDate());
         expenseRepository.save(expense);
     }
@@ -55,7 +46,10 @@ public class ExpenseServiceImpl implements ExpenseService{
     public void updateExpense(Expense theExpense) {
         Expense tempExpense = expenseRepository.findById(theExpense.getId()).get();
         tempExpense.setExpName(theExpense.getExpName());
-        groupService.updateTotalExpense(theExpense.getExpGrp(),theExpense.getExpAmt()-tempExpense.getExpAmt());
+        if (!theExpense.getExpName().startsWith("Settle Up Transaction")) {
+            // Update total expense of group only if the expense is not for settle up
+            groupService.updateTotalExpense(theExpense.getExpGrp(), theExpense.getExpAmt() - tempExpense.getExpAmt());
+        }
         tempExpense.setExpAmt(theExpense.getExpAmt());
         tempExpense.setUsrSplitBtw(theExpense.getUsrSplitBtw());
         tempExpense.setExpPaidBy(theExpense.getExpPaidBy());
